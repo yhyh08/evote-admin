@@ -20,9 +20,14 @@
                                 <div class="mb-3">
                                     <label for="password">{{ __('Password') }}</label>
                                     <div class="@error('password')border border-danger rounded-3 @enderror">
-                                        <input wire:model.live="password" id="password" type="password" class="form-control"
-                                            placeholder="Password" aria-label="Password"
-                                            aria-describedby="password-addon">
+                                        <div class="password-container">
+                                            <input wire:model.live="password" id="password" type="password" class="form-control"
+                                                placeholder="Password" aria-label="Password"
+                                                aria-describedby="password-addon">
+                                            <span id="togglePassword" class="eye-icon" wire:ignore>
+                                                <i class="fas fa-eye"></i>
+                                            </span>
+                                        </div>
                                     </div>
                                     @error('password') <div class="text-danger">{{ $message }}</div> @enderror
                                 </div>
@@ -33,7 +38,7 @@
                                 </div>
                                 <div class="text-center">
                                     <button type="submit"
-                                        class="btn bg-gradient-info w-100 mt-4 mb-0">{{ __('Sign in') }}</button>
+                                        class="btn w-100 mt-4 mb-0 btn-color text-white">{{ __('Sign in') }}</button>
                                 </div>
                             </form>
                         </div>
@@ -59,3 +64,22 @@
         </div>
     </div>
 </section>
+
+<script>
+    document.addEventListener('livewire:load', function() {
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('#togglePassword')) {
+                const passwordField = document.querySelector('#password');
+                const icon = e.target.closest('#togglePassword').querySelector('i');
+                
+                // Toggle password visibility
+                const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordField.setAttribute('type', type);
+                
+                // Toggle icon
+                icon.classList.toggle('fa-eye');
+                icon.classList.toggle('fa-eye-slash');
+            }
+        });
+    });
+</script>

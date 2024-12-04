@@ -1,3 +1,33 @@
-login-height{
-    height: 950px;
+.login-height{
+    height: 650px;
+}
+
+.btn-color{
+    background-color: #7A1CAC !important;
+}
+
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.eye-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 10;
+    padding: 5px;
+    color: #666;
+}
+
+.eye-icon:hover {
+    color: #333;
+}
+
+.password-container input[type="password"],
+.password-container input[type="text"] {
+    padding-right: 35px;
 }

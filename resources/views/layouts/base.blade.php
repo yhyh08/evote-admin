@@ -8,8 +8,8 @@
     @if (env('IS_DEMO'))
         <x-demo-metas></x-demo-metas>
     @endif
-    <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
-    <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/use/sitelogo.png">
+    <link rel="icon" type="image/png" href="../assets/img/use/sitelogo.png">
     <title>
         E-vote Central  
     </title>
@@ -21,6 +21,10 @@
     <!-- Font Awesome Icons -->
     <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
     <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<script src="{{ asset('assets/js/password-toggle.js') }}" defer></script>
+
     <!-- CSS Files -->
     <link id="pagestyle" href="../assets/css/soft-ui-dashboard.css?v=1" rel="stylesheet" />
     @livewireStyles
