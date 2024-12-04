@@ -1,22 +1,22 @@
-<meta name="keywords" content="creative tim, updivision, html dashboard, laravel, livewire, laravel livewire, alpine.js, html css dashboard laravel, soft ui dashboard laravel, livewire soft ui dashboard, soft ui admin, livewire dashboard, livewire admin, web dashboard, bootstrap 5 dashboard laravel, bootstrap 5, css3 dashboard, bootstrap 5 admin laravel, soft ui dashboard bootstrap 5 laravel, frontend, responsive bootstrap 5 dashboard, soft ui dashboard, soft ui laravel bootstrap 5 dashboard" />
+<meta name="keywords" content="creative tim, updivision, html dashboard, laravel, livewire, laravel livewire, alpine.js, html css dashboard laravel, E-vote Central laravel, livewire E-vote Central, soft ui admin, livewire dashboard, livewire admin, web dashboard, bootstrap 5 dashboard laravel, bootstrap 5, css3 dashboard, bootstrap 5 admin laravel, E-vote Central bootstrap 5 laravel, frontend, responsive bootstrap 5 dashboard, E-vote Central, soft ui laravel bootstrap 5 dashboard" />
 <meta name="description" content="Dozens of handcrafted UI components, Laravel authentication, register & profile editing, Livewire & Alpine.js" />
-<meta itemprop="name" content="Soft UI Dashboard Laravel Livewire by Creative Tim & UPDIVISION" />
+<meta itemprop="name" content="E-vote Central  " />
 <meta itemprop="description" content="Dozens of handcrafted UI components, Laravel authentication, register & profile editing, Livewire & Alpine.js" />
 <meta itemprop="image" content="https://s3.amazonaws.com/creativetim_bucket/products/492/original/soft-ui-dashboard-laravel-livewire.jpg" />
 <meta name="twitter:card" content="product" />
 <meta name="twitter:site" content="@creativetim" />
-<meta name="twitter:title" content="Soft UI Dashboard Laravel Livewire by Creative Tim & UPDIVISION" />
+<meta name="twitter:title" content="E-vote Central  " />
 <meta name="twitter:description" content="Dozens of handcrafted UI components, Laravel authentication, register & profile editing, Livewire & Alpine.js" />
 <meta name="twitter:creator" content="@creativetim" />
 <meta name="twitter:image" content="https://s3.amazonaws.com/creativetim_bucket/products/492/original/soft-ui-dashboard-laravel-livewire.jpg" />
 <meta property="fb:app_id" content="655968634437471" />
-<meta property="og:title" content="Soft UI Dashboard Laravel Livewire by Creative Tim & UPDIVISION" />
+<meta property="og:title" content="E-vote Central  " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://www.creative-tim.com/live/soft-ui-dashboard-laravel" />
 <meta property="og:image" content="https://s3.amazonaws.com/creativetim_bucket/products/492/original/soft-ui-dashboard-laravel-livewire.jpg" />
 <meta property="og:description" content="Dozens of handcrafted UI components, Laravel authentication, register & profile editing, Livewire & Alpine.js" />
 <meta property="og:site_name" content="Creative Tim" />
-<meta  name="keywords" content="creative tim, updivision, html dashboard, laravel, livewire, laravel livewire, alpine.js, html css dashboard laravel, soft ui dashboard laravel, livewire soft ui dashboard, soft ui admin, livewire dashboard, livewire admin, web dashboard, bootstrap 4 dashboard laravel, bootstrap 4, css3 dashboard, bootstrap 4 admin laravel, soft ui dashboard bootstrap 4 laravel, frontend, responsive bootstrap 4 dashboard, soft ui dashboard, soft ui laravel bootstrap 4 dashboard" />
+<meta  name="keywords" content="creative tim, updivision, html dashboard, laravel, livewire, laravel livewire, alpine.js, html css dashboard laravel, E-vote Central laravel, livewire E-vote Central, soft ui admin, livewire dashboard, livewire admin, web dashboard, bootstrap 4 dashboard laravel, bootstrap 4, css3 dashboard, bootstrap 4 admin laravel, E-vote Central bootstrap 4 laravel, frontend, responsive bootstrap 4 dashboard, E-vote Central, soft ui laravel bootstrap 4 dashboard" />
 
 <script>
     (function(a,s,y,n,c,h,i,d,e){
