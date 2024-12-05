@@ -40,8 +40,8 @@
             </li>
 
             <li class="nav-item pb-2">
-                <a class="nav-link {{ Route::currentRouteName() == 'dashboard' ? 'active' : '' }}"
-                    href="{{ route('dashboard') }}">
+                    <a class="nav-link {{ Route::currentRouteName() == 'election-committee' ? 'active' : '' }}"
+                    href="{{ route('election-committee') }}">
                     <div
                         class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                         <svg width="12px" height="12px" viewBox="0 0 45 40" version="1.1"
@@ -69,8 +69,8 @@
             </li>
 
             <li class="nav-item pb-2">
-                <a class="nav-link {{ Route::currentRouteName() == 'dashboard' ? 'active' : '' }}"
-                    href="{{ route('dashboard') }}">
+                <a class="nav-link {{ Route::currentRouteName() == 'election' ? 'active' : '' }}"
+                    href="{{ route('election') }}">
                     <div
                         class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                         <svg width="12px" height="12px" viewBox="0 0 45 40" version="1.1"
@@ -127,8 +127,8 @@
             </li>
 
             <li class="nav-item pb-2">
-                <a class="nav-link {{ Route::currentRouteName() == 'dashboard' ? 'active' : '' }}"
-                    href="{{ route('dashboard') }}">
+                <a class="nav-link {{ Route::currentRouteName() == 'nomination' ? 'active' : '' }}"
+                    href="{{ route('nomination') }}">
                     <div
                         class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                         <svg width="12px" height="12px" viewBox="0 0 45 40" version="1.1"

@@ -72,12 +72,12 @@
       <div class="row">
           <div class="col-12">
               <div class="card mb-4 mt-4">
-                  <div class="card-header pb-0">
+                  <div class="card-header py-4 px-3">
                       <div class="d-flex flex-row justify-content-between">
                           <div>
                               <h5 class="mb-0">Results</h5>
                           </div>
-                          <a href="#" class="btn bg-gradient-primary btn-sm mb-0" type="button">+&nbsp; View More</a>
+                          <a href="#" class="btn bg-gradient-primary btn-sm mb-0" type="button">View More</a>
                       </div>
                   </div>
                   <div class="card-body px-0 pt-0 pb-2">
@@ -85,40 +85,39 @@
                           <table class="table align-items-center mb-0">
                               <thead>
                                   <tr>
-                                      <th class="text-left text-secondary text-xxs font-weight-bolder opacity-7">
+                                      <th class="text-left text-secondary text-xxs font-weight-bolder opacity-7 ps-3">
                                           Election
                                       </th>
-                                      <th class="text-left text-secondary text-xxs font-weight-bolder opacity-7 p-0">
+                                      <th class="text-left text-secondary text-xxs font-weight-bolder opacity-7 ps-3">
                                           Election Detail
                                       </th>
-                                      <th class="text-left text-uppercase text-xss text-xxs font-weight-bolder opacity-7 p-0">
+                                      <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">
                                           Period
                                       </th>
-                                      <th class="text-left text-uppercase text-xss text-xxs font-weight-bolder opacity-7 p-0">
+                                      <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">
                                           Status
                                       </th>
-                                      <th class="text-left text-uppercase text-xss text-xxs font-weight-bolder opacity-7 p-0">
+                                      <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">
                                           Action
                                       </th>
                                   </tr>
                               </thead>
                               <tbody>
                                   <tr>
-                                      <td class="ps-4">
+                                      <td class="ps-3">
                                           <p class="text-xs font-weight-bold mb-0">Election</p>
                                       </td>
-                                      <td class="text-left">
-                                          <p class="text-xs font-weight-bold mb-0 p-0">Election Detail</p>
+                                      <td class="ps-3">
+                                          <p class="text-xs font-weight-bold mb-0">Election Detail</p>
                                       </td>
-                                      <td class="text-left">
-                                          <p class="text-xs font-weight-bold mb-0 p-0">28 Jun 2024 - 28 July 2024</p>
+                                      <td class="ps-3">
+                                          <p class="text-xs font-weight-bold mb-0">28 Jun 2024 - 28 July 2024</p>
                                       </td>
-                                      <td class="text-left">
-                                          <span class="text-xs font-weight-bold mb-0 p-0">End</span>
+                                      <td class="ps-3">
+                                          <span class="text-xs font-weight-bold mb-0">End</span>
                                       </td>
-                                      <td class="text-left">
-                                          <a href="#" class="mx-3" data-bs-toggle="tooltip"
-                                              data-bs-original-title="Edit user">
+                                      <td class="ps-3">
+                                          <a href="#" class="me-3" data-bs-toggle="tooltip" data-bs-original-title="Edit user">
                                               <i class="fas fa-user-edit text-secondary"></i>
                                           </a>
                                           <span>

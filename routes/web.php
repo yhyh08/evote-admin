@@ -6,7 +6,10 @@ use App\Http\Livewire\Auth\ForgotPassword;
 use App\Http\Livewire\Auth\ResetPassword;
 use App\Http\Livewire\Auth\SignUp;
 use App\Http\Livewire\Auth\Login;
-use App\Http\Livewire\Dashboard;
+use App\Http\Livewire\Admin\Dashboard;
+use App\Http\Livewire\Admin\ElectionCommittee;
+use App\Http\Livewire\Admin\Election;
+use App\Http\Livewire\Admin\Nomination;
 use App\Http\Livewire\Billing;
 use App\Http\Livewire\Profile;
 use App\Http\Livewire\Tables;
@@ -43,6 +46,10 @@ Route::get('/reset-password/{id}',ResetPassword::class)->name('reset-password')-
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
+    Route::get('/election-committee', ElectionCommittee::class)->name('election-committee');
+    Route::get('/election', Election::class)->name('election');
+    Route::get('/nomination', Nomination::class)->name('nomination');
+    
     Route::get('/billing', Billing::class)->name('billing');
     Route::get('/profile', Profile::class)->name('profile');
     Route::get('/tables', Tables::class)->name('tables');
