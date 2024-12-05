@@ -31,3 +31,12 @@
 .password-container input[type="text"] {
     padding-right: 35px;
 }
+
+.dashboard-logo{
+    max-width: 200px !important;
+    max-height: 200px !important;
+}
+
+.logo-padding{
+    padding: 1% 8% !important;
+}
