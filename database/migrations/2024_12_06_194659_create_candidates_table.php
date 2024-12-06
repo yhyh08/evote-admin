@@ -11,15 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('nominations', function (Blueprint $table) {
-            $table->id();
+        Schema::create('candidates', function (Blueprint $table) {
+            $table->id('id');
+            $table->string('category');
+            $table->string('nationality');
             $table->string('religion');
             $table->string('job');
+            $table->decimal('income', 10, 2);
+            $table->string('marriage_status');
             $table->string('status');
-            $table->date('status_date');
-            $table->string('reason');
+            $table->date('receive_date');
+            $table->date('approve_date');
             $table->string('sign');
-            $table->foreignId('candidate_id')->constrained('candidates');
             $table->timestamps();
         });
     }
@@ -29,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('nomination');
+        Schema::dropIfExists('candidates');
     }
 };

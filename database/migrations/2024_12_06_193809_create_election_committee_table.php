@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('election_committee', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('position');
+        Schema::create('election_committees', function (Blueprint $table) {
+            $table->id('com_id');
+            $table->string('com_name');
+            $table->string('com_phone');
+            $table->string('com_email');
+            $table->string('com_sign');
+            $table->boolean('isApprove');
             $table->timestamps();
         });
     }

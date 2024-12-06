@@ -12,11 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('elections', function (Blueprint $table) {
-            $table->id();
-            $table->string('title');
+            $table->id('election_id');
+            $table->string('election_topic');
+            $table->text('description');
             $table->date('start_date');
             $table->date('end_date');
-            $table->foreignId('organization_id')->constrained()->onDelete('cascade');
+            $table->string('nominate_period');
+            $table->string('organization_detail');
+            $table->string('position');
+            $table->string('status');
+            $table->string('type');
             $table->timestamps();
         });
     }
