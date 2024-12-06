@@ -6,7 +6,7 @@
                     <div class="d-flex flex-row justify-content-between">
                         <div>
                             <h5 class="mb-0">All Users</h5>
-                        </div>
+                        </div>  
                         <a href="#" class="btn bg-gradient-primary btn-sm mb-0" type="button">+&nbsp; New User</a>
                     </div>
                 </div>

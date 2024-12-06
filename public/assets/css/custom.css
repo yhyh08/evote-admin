@@ -40,3 +40,12 @@
 .logo-padding{
     padding: 1% 8% !important;
 }
+
+.btn-func{
+    width: 135px;
+}
+
+.sidebar-icon{
+    font-size: 0.85rem !important;
+    color: #111111 !important;
+}

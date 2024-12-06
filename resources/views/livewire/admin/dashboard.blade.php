@@ -133,7 +133,7 @@
           </div>
       </div>
 
-      {{-- <div class="row mt-4">
+      <!-- <div class="row mt-4">
         <div class="col-lg-5 mb-lg-0 mb-4">
           <div class="card">
             <div class="card-body p-3">
@@ -161,7 +161,7 @@
             </div>
           </div>
         </div>
-      </div> --}}
+      </div> -->
 
     </div>
   </main>
@@ -251,7 +251,7 @@
             tension: 0.4,
             borderWidth: 0,
             pointRadius: 0,
-            borderColor: "#fbcf33",
+            borderColor: "#7A1CAC",
             borderWidth: 3,
             backgroundColor: gradientStroke1,
             data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
@@ -263,7 +263,7 @@
             tension: 0.4,
             borderWidth: 0,
             pointRadius: 0,
-            borderColor: "#f53939",
+            borderColor: "#7A1CAC",
             borderWidth: 3,
             backgroundColor: gradientStroke2,
             data: [30, 90, 40, 140, 290, 290, 340, 230, 400],
