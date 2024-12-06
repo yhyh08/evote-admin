@@ -10,7 +10,7 @@
                                     <h5 class="mb-0">Total Organization</h5>
                                 </div>
                                 <a href="#" class="btn bg-gradient-primary btn-sm mb-0" type="button">
-                                    <i class="fa-solid fa-circle-plus me-2"></i>Add</a>
+                                    <i class="fa-solid fa-circle-plus me-2 btn-add"></i>Add</a>
                             </div>
                         </div>
                         <div class="card-body pt-4 p-3">

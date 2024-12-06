@@ -9,7 +9,8 @@
                             <div>
                                 <h5 class="mb-0">Election Committee</h5>
                             </div>
-                            <a href="#" class="btn bg-gradient-primary btn-sm mb-0" type="button">View More</a>
+                            <a href="#" class="btn bg-gradient-primary btn-sm mb-0" type="button">
+                                    <i class="fa-solid fa-circle-plus me-2 btn-add"></i>Add</a>
                         </div>
                     </div>
                     <div class="card-body px-0 pt-0 pb-2">

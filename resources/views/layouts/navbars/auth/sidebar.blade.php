@@ -26,7 +26,7 @@
                     href="{{ route('election-committee') }}">
                     <div
                         class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="fa-solid fa-file-lines sidebar-icon"></i>
+                        <i class="fa-solid fa-cookie sidebar-icon"></i>
                     </div>
                     <span class="nav-link-text ms-1">Election Committee</span>
                 </a>
@@ -37,7 +37,7 @@
                     href="{{ route('election') }}">
                     <div
                         class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="fa-solid fa-file-lines sidebar-icon"></i>
+                        <i class="fa-solid fa-rocket sidebar-icon"></i>
                     </div>
                     <span class="nav-link-text ms-1">Election</span>
                 </a>
@@ -48,7 +48,7 @@
                     href="{{ route('organization') }}">
                     <div
                         class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="fa-solid fa-file-lines sidebar-icon"></i>
+                        <i class="fa-solid fa-user-group sidebar-icon"></i>
                     </div>
                     <span class="nav-link-text ms-1">Organization</span>
                 </a>
@@ -59,7 +59,7 @@
                     href="{{ route('nomination') }}">
                     <div
                         class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="fa-solid fa-file-lines sidebar-icon"></i>
+                        <i class="fa-solid fa-book sidebar-icon"></i>
                     </div>
                     <span class="nav-link-text ms-1">Nomination</span>
                 </a>
@@ -70,7 +70,7 @@
                     href="{{ route('voting-eligibility') }}">
                     <div
                         class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="fa-solid fa-file-lines sidebar-icon"></i>
+                        <i class="fa-solid fa-clipboard-list sidebar-icon"></i>
                     </div>
                     <span class="nav-link-text ms-1">Voting Eligbility</span>
                 </a>
@@ -81,7 +81,7 @@
                     href="{{ route('result') }}">
                     <div
                         class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="fa-solid fa-file-lines sidebar-icon"></i>
+                        <i class="fa-solid fa-chart-pie sidebar-icon"></i>
                     </div>
                     <span class="nav-link-text ms-1">Result</span>
                 </a>
@@ -92,7 +92,7 @@
                     href="{{ route('report') }}">
                     <div
                         class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="fa-solid fa-file-lines sidebar-icon"></i>
+                        <i class="fa-solid fa-file-pdf sidebar-icon"></i>
                     </div>
                     <span class="nav-link-text ms-1">Report</span>
                 </a>
@@ -103,7 +103,7 @@
                     href="{{ route('settings') }}">
                     <div
                         class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="fa-solid fa-file-lines sidebar-icon"></i>
+                        <i class="fa-solid fa-gear sidebar-icon"></i>
                     </div>
                     <span class="nav-link-text ms-1">Settings</span>
                 </a>
