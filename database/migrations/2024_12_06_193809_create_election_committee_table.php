@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('com_name');
             $table->string('com_phone');
             $table->string('com_email');
-            $table->string('com_sign');
             $table->boolean('isApprove');
             $table->timestamps();
         });

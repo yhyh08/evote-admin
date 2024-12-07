@@ -150,6 +150,11 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'com_name' => 'election committee member name',
+        'com_phone' => 'phone number',
+        'com_email' => 'email address',
+        'isApprove' => 'status',
+    ],
 
 ];
