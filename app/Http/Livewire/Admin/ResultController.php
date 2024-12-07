@@ -4,7 +4,7 @@ namespace App\Http\Livewire\Admin;
 
 use Livewire\Component;
 
-class Result extends Component
+class ResultController extends Component
 {
     public function render()
     {

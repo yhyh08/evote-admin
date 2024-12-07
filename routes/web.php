@@ -6,15 +6,15 @@ use App\Http\Livewire\Auth\ForgotPassword;
 use App\Http\Livewire\Auth\ResetPassword;
 use App\Http\Livewire\Auth\SignUp;
 use App\Http\Livewire\Auth\Login;
-use App\Http\Livewire\Admin\Dashboard;
-use App\Http\Livewire\Admin\ElectionCommittee;
-use App\Http\Livewire\Admin\Election;
-use App\Http\Livewire\Admin\Nomination;
-use App\Http\Livewire\Admin\Organization;
-use App\Http\Livewire\Admin\VotingEligibility;
-use App\Http\Livewire\Admin\Result;
-use App\Http\Livewire\Admin\Report;
-use App\Http\Livewire\Admin\Settings;
+use App\Http\Livewire\Admin\DashboardController;
+use App\Http\Livewire\Admin\ElectionCommitteeController;
+use App\Http\Livewire\Admin\ElectionController;
+use App\Http\Livewire\Admin\NominationController;
+use App\Http\Livewire\Admin\OrganizationController;
+use App\Http\Livewire\Admin\VotingEligibilityController;
+use App\Http\Livewire\Admin\ResultController;
+use App\Http\Livewire\Admin\ReportController;
+use App\Http\Livewire\Admin\SettingsController;
 
 use App\Http\Livewire\Billing;
 use App\Http\Livewire\Profile;
@@ -49,17 +49,16 @@ Route::get('/login', Login::class)->name('login');
 Route::get('/login/forgot-password', ForgotPassword::class)->name('forgot-password');
 
 Route::get('/reset-password/{id}',ResetPassword::class)->name('reset-password')->middleware('signed');
-
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', Dashboard::class)->name('dashboard');
-    Route::get('/election-committee', ElectionCommittee::class)->name('election-committee');
-    Route::get('/election', Election::class)->name('election');
-    Route::get('/nomination', Nomination::class)->name('nomination');
-    Route::get('/organization', Organization::class)->name('organization');
-    Route::get('/voting-eligibility', VotingEligibility::class)->name('voting-eligibility');
-    Route::get('/result', Result::class)->name('result');
-    Route::get('/report', Report::class)->name('report');
-    Route::get('/settings', Settings::class)->name('settings');
+    Route::get('/dashboard', DashboardController::class)->name('dashboard');
+    Route::get('/election-committee', ElectionCommitteeController::class)->name('election-committee');
+    Route::get('/election', ElectionController::class)->name('election');
+    Route::get('/nomination', NominationController::class)->name('nomination');
+    Route::get('/organization', OrganizationController::class)->name('organization');
+    Route::get('/voting-eligibility', VotingEligibilityController::class)->name('voting-eligibility');
+    Route::get('/result', ResultController::class)->name('result');
+    Route::get('/report', ReportController::class)->name('report');
+    Route::get('/settings', SettingsController::class)->name('settings');
     
     Route::get('/billing', Billing::class)->name('billing');
     Route::get('/profile', Profile::class)->name('profile');

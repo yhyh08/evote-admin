@@ -4,7 +4,7 @@ namespace App\Http\Livewire\Admin;
 
 use Livewire\Component;
 
-class Nomination extends Component
+class NominationController extends Component
 {
     public function render()
     {

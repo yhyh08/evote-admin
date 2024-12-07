@@ -4,7 +4,7 @@ namespace App\Http\Livewire\Admin;
 
 use Livewire\Component;
 
-class Organization extends Component
+class OrganizationController extends Component
 {
     public function render()
     {

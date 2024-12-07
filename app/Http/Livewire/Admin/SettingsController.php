@@ -5,7 +5,7 @@ use App\Models\User;
 
 use Livewire\Component;
 
-class Settings extends Component
+class SettingsController extends Component
 {
     public User $user;
     public $showSuccesNotification  = false;

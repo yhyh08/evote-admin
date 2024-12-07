@@ -4,7 +4,7 @@ namespace App\Http\Livewire\Admin;
 
 use Livewire\Component;
 
-class VotingEligibility extends Component
+class VotingEligibilityController extends Component
 {
     public function render()
     {

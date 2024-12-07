@@ -4,7 +4,7 @@ namespace App\Http\Livewire\Admin;
 
 use Livewire\Component;
 
-class ElectionCommittee extends Component
+class ElectionCommitteeController extends Component
 {
     public function render()
     {
