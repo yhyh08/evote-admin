@@ -19,7 +19,7 @@ return new class extends Migration
             $table->date('status_date');
             $table->string('reason');
             $table->string('sign');
-            $table->foreignId('candidate_id')->constrained('candidates');
+            $table->foreignId('candidate_id');
             $table->timestamps();
         });
     }

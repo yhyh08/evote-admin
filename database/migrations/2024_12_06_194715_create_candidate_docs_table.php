@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description');
             $table->string('uploadFile');
-            $table->foreignId('candidate_id')->constrained('candidates');
+            $table->foreignId('candidate_id');
             $table->timestamps();
         });
     }

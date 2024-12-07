@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id('ballot_id');
             $table->boolean('isValid');
             $table->string('status');
-            $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('election_id')->constrained('elections');
+            $table->foreignId('user_id');
+            $table->foreignId('election_id');
             $table->timestamps();
         });
     }

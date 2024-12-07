@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('results', function (Blueprint $table) {
             $table->id('result_id');
             $table->integer('ballot_count');
-            $table->foreignId('election_id')->constrained('elections');
+            $table->foreignId('election_id');
             $table->timestamps();
         });
     }
