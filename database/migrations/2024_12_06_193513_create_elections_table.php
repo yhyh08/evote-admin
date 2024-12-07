@@ -18,7 +18,6 @@ return new class extends Migration
             $table->date('start_date');
             $table->date('end_date');
             $table->string('nominate_period');
-            $table->string('organization_detail');
             $table->string('position');
             $table->string('status');
             $table->string('type');

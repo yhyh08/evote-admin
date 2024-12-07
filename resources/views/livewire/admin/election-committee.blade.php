@@ -12,7 +12,7 @@
                             <div>
                                 <h5 class="mb-0">Election Committee</h5>
                             </div>
-                            <a href="#" class="btn bg-gradient-primary btn-sm mb-0" type="button" wire:click="create">
+                            <a href="#" wire:click="create" class="btn bg-gradient-primary btn-sm mb-0" type="button" >
                                     <i class="fa-solid fa-circle-plus me-2 btn-add"></i>Add</a>
                         </div>
                     </div>

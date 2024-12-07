@@ -7,14 +7,12 @@ use App\Models\ElectionCommittee;
 
 class ElectionCommitteeController extends Component
 {
-    // Properties for form
     public $com_name, $com_phone, $com_email, $isApprove;
     public $committee_id;
     public $isOpen = false;
     public $isView = false;
     public $confirmingDeletion = false;
 
-    // Validation rules
     protected $rules = [
         'com_name' => 'required|min:3',
         'com_phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
@@ -22,7 +20,6 @@ class ElectionCommitteeController extends Component
         'isApprove' => 'required'
     ];
 
-    // Add this property to your controller
     protected $messages = [
         'com_name.required' => 'The election committee name is required.',
         'com_name.min' => 'The name must be at least 3 characters.',
@@ -107,8 +104,8 @@ class ElectionCommitteeController extends Component
 
     public function confirmDelete($com_id)
     {
-        $this->confirmingDeletion = true;
         $this->committee_id = $com_id;
+        $this->confirmingDeletion = true;
     }
 
     public function delete()
