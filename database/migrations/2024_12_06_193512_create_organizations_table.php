@@ -17,9 +17,11 @@ return new class extends Migration
             $table->string('org_desc');
             $table->string('org_cat');
             $table->string('org_address');
+            $table->string('org_img')->nullable();
             $table->string('pic_name');
             $table->string('pic_phone');
             $table->string('pic_email');
+            $table->boolean('is_active')->default(false);
             $table->timestamps();
         });
     }
