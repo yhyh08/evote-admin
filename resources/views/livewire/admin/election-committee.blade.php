@@ -42,7 +42,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($committees as $index => $committee)
+                                    @forelse($committees as $index => $committee)
                                         <tr>
                                             <td class="ps-3">
                                                 <p class="text-xs font-weight-bold mb-0">{{ $index + 1 }}</p>
@@ -71,7 +71,13 @@
                                                 </a>
                                             </td>
                                         </tr>
-                                    @endforeach
+                                    @empty
+                                        <tr>
+                                            <td colspan="6" class="text-center">
+                                                <p class="text-s font-weight-bold mb-0">No election committee found</p>
+                                            </td>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>

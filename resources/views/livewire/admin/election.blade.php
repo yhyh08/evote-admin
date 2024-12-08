@@ -62,7 +62,9 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="6" class="text-center">No elections found</td>
+                                                <td colspan="6" class="text-center">
+                                                    <p class="text-s font-weight-bold mb-0">No election found</p>
+                                                </td>
                                             </tr>
                                         @endforelse
                                     </tbody>
