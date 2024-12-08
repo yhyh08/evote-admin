@@ -7,7 +7,7 @@ use App\Models\Election;
 
 class ElectionController extends Component
 {
-    public $election_topic, $description, $start_date, $end_date, $status,$type, $position, $nominate_period;
+    public $election_topic, $description, $start_date, $end_date, $status,$type, $position, $nominate_period_start, $nominate_period_end;
     public $election_id;
     public $isOpen = false;
     public $isView = false;
@@ -18,8 +18,9 @@ class ElectionController extends Component
         'type' => 'required',
         'position' => 'required',
         'description' => 'required|min:10',
-        'nominate_period' => 'required|date|before_or_equal:start_date',
-        'start_date' => 'required|date|after_or_equal:nominate_period',
+        'nominate_period_start' => 'required|date',
+        'nominate_period_end' => 'required|date|after_or_equal:nominate_period_start',
+        'start_date' => 'required|date|after_or_equal:nominate_period_end',
         'end_date' => 'required|date|after_or_equal:start_date',
         'status' => 'required'
     ];
@@ -29,10 +30,12 @@ class ElectionController extends Component
         'type.required' => 'The election type is required.',
         'position.required' => 'The position is required.',
         'description.required' => 'The description is required.',
-        'nominate_period.required' => 'The nomination period is required.',
-        'nominate_period.before_or_equal' => 'The nomination period must be before or equal to the start date.',
+        'nominate_period_start.required' => 'The nomination period start is required.',
+        'nominate_period_start.before_or_equal' => 'The nomination period start must be before or equal to the nomination period end.',
+        'nominate_period_end.required' => 'The nomination period end is required.',
+        'nominate_period_end.after_or_equal' => 'The nomination period end must be after or equal to the nomination period start.',
         'start_date.required' => 'The start date is required.',
-        'start_date.after_or_equal' => 'The start date must be after or equal to the nomination period.',
+        'start_date.after_or_equal' => 'The start date must be after or equal to the nomination period end.',
         'end_date.required' => 'The end date is required.',
         'end_date.after_or_equal' => 'The end date must be after or equal to the start date.',
         'status.required' => 'The status is required.'
@@ -62,7 +65,8 @@ class ElectionController extends Component
             'description' => $this->description,
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
-            'nominate_period' => $this->nominate_period,
+            'nominate_period_start' => $this->nominate_period_start,
+            'nominate_period_end' => $this->nominate_period_end,
             'status' => $this->status
         ]);
 
@@ -75,14 +79,22 @@ class ElectionController extends Component
     public function edit($id)
     {
         $election = Election::findOrFail($id);
+        
+        // Reset any previous state
+        $this->resetInputFields();
+        
         $this->election_id = $election->election_id;
         $this->election_topic = $election->election_topic;
         $this->type = $election->type;
         $this->position = $election->position;
         $this->description = $election->description;
-        $this->start_date = $election->start_date;
-        $this->end_date = $election->end_date;
-        $this->nominate_period = $election->nominate_period;
+        
+        // Format dates properly
+        $this->nominate_period_start = date('Y-m-d', strtotime($election->nominate_period_start));
+        $this->nominate_period_end = date('Y-m-d', strtotime($election->nominate_period_end));
+        $this->start_date = date('Y-m-d', strtotime($election->start_date));
+        $this->end_date = date('Y-m-d', strtotime($election->end_date));
+        
         $this->status = $election->status;
         
         $this->openModal();
@@ -99,7 +111,8 @@ class ElectionController extends Component
             'description' => $this->description,
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
-            'nominate_period' => $this->nominate_period,
+            'nominate_period_start' => $this->nominate_period_start,
+            'nominate_period_end' => $this->nominate_period_end,
             'status' => $this->status
         ]);
 
@@ -111,17 +124,29 @@ class ElectionController extends Component
     public function view($id)
     {
         $election = Election::findOrFail($id);
+        
+        // Reset any previous state
+        $this->resetInputFields();
+        
+        // Set the view mode first
+        $this->isView = true;
+        
+        // Assign values
         $this->election_id = $election->election_id;
         $this->election_topic = $election->election_topic;
         $this->type = $election->type;
         $this->position = $election->position;
         $this->description = $election->description;
-        $this->start_date = $election->start_date;
-        $this->end_date = $election->end_date;
-        $this->nominate_period = $election->nominate_period;
+        
+        // Format dates properly
+        $this->nominate_period_start = date('Y-m-d', strtotime($election->nominate_period_start));
+        $this->nominate_period_end = date('Y-m-d', strtotime($election->nominate_period_end));
+        $this->start_date = date('Y-m-d', strtotime($election->start_date));
+        $this->end_date = date('Y-m-d', strtotime($election->end_date));
+        
         $this->status = $election->status;
 
-        $this->isView = true;
+        // Open the modal after all data is set
         $this->openModal();
     }
 
@@ -146,7 +171,8 @@ class ElectionController extends Component
         $this->description = '';
         $this->start_date = '';
         $this->end_date = '';
-        $this->nominate_period = '';
+        $this->nominate_period_start = '';
+        $this->nominate_period_end = '';
         $this->status = '';
         $this->election_id = null;
         $this->isView = false;
@@ -162,5 +188,19 @@ class ElectionController extends Component
     {
         $this->isOpen = false;
         $this->dispatch('modal-close');
+    }
+
+    public function updatedNominatePeriodStart($value)
+    {
+        if (!empty($value)) {
+            $this->start_date = $value;
+        }
+    }
+
+    public function updatedNominatePeriodEnd($value)
+    {
+        if (!empty($value)) {
+            $this->end_date = $value;
+        }
     }
 }

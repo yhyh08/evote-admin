@@ -18,7 +18,16 @@ class Election extends Model
         'description',
         'start_date',
         'end_date',
-        'nominate_period',
+        'nominate_period_start',
+        'nominate_period_end',
         'status'
+    ];
+
+    // Add date casting
+    protected $casts = [
+        'start_date' => 'date',
+        'end_date' => 'date',
+        'nominate_period_start' => 'date',
+        'nominate_period_end' => 'date',
     ];
 } 

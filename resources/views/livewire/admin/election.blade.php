@@ -40,10 +40,10 @@
                                                     <p class="text-xs font-weight-bold mb-0">{{ $election->election_topic }}</p>
                                                 </td>
                                                 <td class="ps-3">
-                                                    <p class="text-xs font-weight-bold mb-0">{{ $election->start_date }}</p>
+                                                    <p class="text-xs font-weight-bold mb-0">{{ date('Y-m-d', strtotime($election->start_date)) }}</p>
                                                 </td>
                                                 <td class="ps-3">
-                                                    <p class="text-xs font-weight-bold mb-0">{{ $election->end_date }}</p>
+                                                    <p class="text-xs font-weight-bold mb-0">{{ date('Y-m-d', strtotime($election->end_date)) }}</p>
                                                 </td>
                                                 <td class="ps-3">
                                                     <span class="text-xs font-weight-bold mb-0">{{ $election->status }}</span>
@@ -117,32 +117,47 @@
                         <textarea wire:model="description" class="form-control" @if($isView) readonly @endif></textarea>
                         @error('description') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
-                    <div class="mb-3">
-                        <label>Nomination Period</label>
-                        <input type="date" 
-                               wire:model="nominate_period" 
-                               class="form-control" 
-                               min="{{ date('Y-m-d') }}"
-                               @if($isView) readonly @endif>
-                        @error('nominate_period') <span class="text-danger">{{ $message }}</span> @enderror
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label>Nomination Start Date</label>
+                            <input type="date" 
+                                   wire:model="nominate_period_start"
+                                   wire:change="$set('start_date', $event.target.value)"
+                                   class="form-control" 
+                                   min="{{ date('Y-m-d') }}"
+                                   @if($isView) readonly @endif>
+                            @error('nominate_period_start') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
+                        <div class="col-md-6">
+                            <label>Nomination End Date</label>
+                            <input type="date" 
+                                   wire:model="nominate_period_end"
+                                   wire:change="$set('end_date', $event.target.value)"
+                                   class="form-control" 
+                                   min="{{ date('Y-m-d') }}"
+                                   @if($isView) readonly @endif>
+                            @error('nominate_period_end') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label>Start Date</label>
-                        <input type="date" 
-                               wire:model="start_date" 
-                               class="form-control" 
-                               min="{{ date('Y-m-d') }}"
-                               @if($isView) readonly @endif>
-                        @error('start_date') <span class="text-danger">{{ $message }}</span> @enderror
-                    </div>
-                    <div class="mb-3">
-                        <label>End Date</label>
-                        <input type="date" 
-                               wire:model="end_date" 
-                               class="form-control" 
-                               min="{{ date('Y-m-d') }}"
-                               @if($isView) readonly @endif>
-                        @error('end_date') <span class="text-danger">{{ $message }}</span> @enderror
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label>Start Date</label>
+                            <input type="date" 
+                                   wire:model="start_date" 
+                                   class="form-control" 
+                                   min="{{ $nominate_period_start ?? date('Y-m-d') }}"
+                                   @if($isView) readonly @endif>
+                            @error('start_date') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
+                        <div class="col-md-6">
+                            <label>End Date</label>
+                            <input type="date" 
+                                   wire:model="end_date" 
+                                   class="form-control" 
+                                   min="{{ $start_date ?? date('Y-m-d') }}"
+                                   @if($isView) readonly @endif>
+                            @error('end_date') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label>Status</label>
