@@ -1,6 +1,20 @@
 <div>
-    <x-alert type="success" />
-    <x-alert type="error" />
+    @if (session()->has('message'))
+        <div x-data="{ show: true }" 
+             x-show="show" 
+             x-init="setTimeout(() => show = false, 3000)"
+             class="alert alert-success alert-dismissible" 
+             role="alert">
+            <span class="text-sm">{{ session('message') }}</span>
+            <button type="button" 
+                    class="btn-close text-lg py-3 opacity-10" 
+                    data-bs-dismiss="alert" 
+                    aria-label="Close"
+                    @click="show = false">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
     
     <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
         <div class="container-fluid py-4">

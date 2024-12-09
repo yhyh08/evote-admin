@@ -52,7 +52,7 @@
                                             <span class="text-xs font-weight-bold mb-0">jasontan@gmail.com</span>
                                         </td>
                                         <td class="ps-3">
-                                            <span class="text-xs font-weight-bold mb-0">Active</span>
+                                            <span class="text-xs font-weight-bold mb-0">Approve</span>
                                         </td>
                                         <td class="ps-3">
                                             <a href="#" class="me-3" data-bs-toggle="tooltip" data-bs-original-title="Edit user">
