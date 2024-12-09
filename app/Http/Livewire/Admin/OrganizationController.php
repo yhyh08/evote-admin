@@ -127,7 +127,7 @@ class OrganizationController extends Component
         }
         $organization->delete();
         
-        session()->flash('message', 'Organization deleted.');
+        session()->flash('message', 'Organization deleted');
         $this->confirmingDeletion = false;
     }
 
@@ -159,6 +159,10 @@ class OrganizationController extends Component
     {
         $this->selectedOrg = Organization::findOrFail($id);
         $this->viewMode = true;
+        
+        if ($this->selectedOrg->org_img) {
+            $this->selectedOrg->image_url = Storage::url($this->selectedOrg->org_img);
+        }
     }
 
     public function closeView()

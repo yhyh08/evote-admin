@@ -146,7 +146,6 @@ class ElectionController extends Component
         
         $this->status = $election->status;
 
-        // Open the modal after all data is set
         $this->openModal();
     }
 
