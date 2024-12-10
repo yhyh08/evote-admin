@@ -67,6 +67,14 @@ body.modal-open {
     background-color: rgba(0, 0, 0, 0.5);
 }
 
+.modal-custom {
+    background-color: #f8f9fa; 
+}
+
+.modal-backdrop-custom {
+    background-color: rgba(0, 0, 0, 0.4) !important;
+}
+
 .modal {
     z-index: 1050;
 }
@@ -186,4 +194,71 @@ body.modal-open {
 .btn-close span {
     display: block;
     line-height: 1;
+}
+
+.nominee-section {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.nominee-section h6 {
+    margin-bottom: 15px;
+}
+
+.step {
+    text-align: center;
+    position: relative;
+    width: 25%;
+}
+
+.step .number {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #e9ecef;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5px;
+}
+
+.step .text {
+    display: block;
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.step.active .number {
+    background: #6f42c1;
+    color: white;
+}
+
+.step.active .text {
+    color: #6f42c1;
+    font-weight: 600;
+}
+
+.progress {
+    height: 4px;
+    background: #e9ecef;
+}
+
+.progress-bar {
+    background-color: #6f42c1 !important;
+}
+
+.form-control-static {
+    padding: 0.5rem 0;
+    margin-bottom: 0;
+    font-size: 0.875rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #344767;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
 }

@@ -68,5 +68,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/rtl', Rtl::class)->name('rtl');
     Route::get('/laravel-user-profile', UserProfile::class)->name('user-profile');
     Route::get('/laravel-user-management', UserManagement::class)->name('user-management');
+
+    // Route::get('/nomination/{electionId}/view', \App\Http\Livewire\Admin\NominationViewController::class)->name('nomination-view');
 });
 

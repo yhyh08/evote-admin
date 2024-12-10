@@ -12,14 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('nominations', function (Blueprint $table) {
-            $table->id();
-            $table->string('religion');
-            $table->string('job');
+            $table->id('nominee_id');
+            $table->string('nominee_name');
+            $table->string('nominee_phone');
+            $table->string('nominee_email');
             $table->string('status');
             $table->date('status_date');
             $table->string('reason');
-            $table->string('sign');
+            $table->foreignId('election_id');
             $table->foreignId('candidate_id');
+            $table->foreignId('org_id');
             $table->timestamps();
         });
     }
