@@ -7,7 +7,7 @@
                         <div class="card-header py-4 px-3">
                             <div class="d-flex flex-row justify-content-between">
                                 <div>
-                                    <h5 class="mb-0">Nomination</h5>
+                                    <h5 class="mb-0">Nominations & Candidates</h5>
                                 </div>
                             </div>
                         </div>
@@ -17,40 +17,42 @@
                                     <thead>
                                         <tr>
                                             <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">No</th>
-                                            <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">Name</th>
-                                            <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">Phone</th>
-                                            <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">Email</th>
+                                            <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">Election</th>
+                                            <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">Candidate Name</th>
+                                            <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">Position</th>
                                             <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">Status</th>
                                             <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($nominations as $nomination)
-                                        <tr>
-                                            <td class="ps-3">
-                                                <p class="text-xs font-weight-bold mb-0">{{ $loop->iteration }}</p>
-                                            </td>
-                                            <td class="ps-3">
-                                                <p class="text-xs font-weight-bold mb-0">{{ $nomination->nominee_name }}</p>
-                                            </td>
-                                            <td class="ps-3">
-                                                <p class="text-xs font-weight-bold mb-0">{{ $nomination->nominee_phone }}</p>
-                                            </td>
-                                            <td class="ps-3">
-                                                <span class="text-xs font-weight-bold mb-0">{{ $nomination->nominee_email }}</span>
-                                            </td>
-                                            <td class="ps-3">
-                                                <span class="text-xs font-weight-bold mb-0">{{ $nomination->status }}</span>
-                                            </td>
-                                            <td class="ps-3">
-                                            <a href="#" wire:click.prevent="viewNomination({{ $nomination->nominee_id }})" class="me-3" data-bs-toggle="tooltip" data-bs-original-title="View nomination">
-    <i class="fa-solid fa-eye text-secondary"></i>
-</a>
-                                                <a href="#" wire:click.prevent="confirmDelete({{ $nomination->nominee_id }})" class="me-3" data-bs-toggle="tooltip" data-bs-original-title="Delete nomination">
-                                                    <i class="fas fa-trash text-secondary"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
+                                        @foreach($nominations as $election_id => $electionNominations)
+                                            @foreach($electionNominations as $index => $nomination)
+                                                @php
+                                                    $candidate = collect($candidates)->firstWhere('candidate_id', $nomination->candidate_id);
+                                                @endphp
+                                                <tr>
+                                                    <td class="ps-3">
+                                                        <p class="text-xs font-weight-bold mb-0">{{ $loop->parent->iteration }}</p>
+                                                    </td>
+                                                    <td class="ps-3">
+                                                        <p class="text-xs font-weight-bold mb-0">{{ $nomination->election->name ?? 'Unknown Election' }}</p>
+                                                    </td>
+                                                    <td class="ps-3">
+                                                        <p class="text-xs font-weight-bold mb-0">{{ $candidate->candidate_name ?? 'N/A' }}</p>
+                                                    </td>
+                                                    <td class="ps-3">
+                                                        <p class="text-xs font-weight-bold mb-0">{{ $candidate->position ?? 'N/A' }}</p>
+                                                    </td>
+                                                    <td class="ps-3">
+                                                        <span class="text-xs font-weight-bold mb-0">{{ $candidate->status ?? 'N/A' }}</span>
+                                                    </td>
+                                                    <td class="ps-3">
+                                                        <a href="#" wire:click.prevent="viewNomination({{ $nomination->election_id }})" class="me-3" data-bs-toggle="tooltip" data-bs-original-title="View details">
+                                                            <i class="fa-solid fa-eye text-secondary"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                         @endforeach
                                     </tbody>
                                 </table>
@@ -62,71 +64,140 @@
         </div>
     </main>
 
-    <!-- Delete Confirmation Modal -->
-    @if($confirmingDeletion)
-    <div class="modal fade show modal-backdrop-custom" tabindex="-1" role="dialog" style="display: block;">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content modal-custom">
-                <div class="modal-header">
-                    <h5 class="modal-title">Delete Nomination</h5>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to delete this nomination?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-sm" wire:click="cancelDelete">Cancel</button>
-                    <button type="button" class="btn btn-danger btn-sm" wire:click="deleteNomination">Delete</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal-backdrop fade show modal-backdrop-custom"></div>
-    @endif
-
-    <!-- View Nomination Modal -->
+    <!-- View Details Modal -->
     @if($viewingNomination)
     <div class="modal fade show modal-backdrop-custom" tabindex="-1" role="dialog" style="display: block;">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content modal-custom">
                 <div class="modal-header">
-                    <h5 class="modal-title">Nomination Details</h5>
+                    <h5 class="modal-title">Election Details</h5>
                     <button type="button" class="btn-close" wire:click="closeViewModal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <p class="text-sm mb-2"><strong>Nominee Name:</strong></p>
-                            <p class="text-sm text-dark">{{ $selectedNomination->nominee_name }}</p>
-                        </div>
-                        <div class="col-md-6">
-                            <p class="text-sm mb-2"><strong>Status:</strong></p>
-                            <p class="text-sm text-dark">{{ $selectedNomination->status }}</p>
-                        </div>
-                    </div>
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <p class="text-sm mb-2"><strong>Phone:</strong></p>
-                            <p class="text-sm text-dark">{{ $selectedNomination->nominee_phone }}</p>
-                        </div>
-                        <div class="col-md-6">
-                            <p class="text-sm mb-2"><strong>Email:</strong></p>
-                            <p class="text-sm text-dark">{{ $selectedNomination->nominee_email }}</p>
+                    <!-- Progress Steps -->
+                    <div class="progress-steps mb-4">
+                        <div class="d-flex justify-content-between">
+                            <div class="step {{ $currentStep >= 1 ? 'active' : '' }}">
+                                <span>01</span>
+                                <p>Nominee</p>
+                            </div>
+                            <div class="step {{ $currentStep >= 2 ? 'active' : '' }}">
+                                <span>02</span>
+                                <p>Candidate Info</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <p class="text-sm mb-2"><strong>Reason for Nomination:</strong></p>
-                            <p class="text-sm text-dark">{{ $selectedNomination->reason }}</p>
+
+                    <!-- Step Content -->
+                    @if($currentStep == 1)
+                        <!-- Nominees Information -->
+                        <div class="step-content">
+                            @foreach($selectedNomination as $index => $nominee)
+                                <div class="nominee-section mb-4">
+                                    <h4 class="mb-3">Nominee {{ $index + 1 }}</h4>
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
+                                            <p class="text-sm mb-0"><strong>Name:</strong></p>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <p class="text-sm mb-0">{{ $nominee->nominee_name }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
+                                            <p class="text-sm mb-0"><strong>Phone:</strong></p>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <p class="text-sm mb-0">{{ $nominee->nominee_phone }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
+                                            <p class="text-sm mb-0"><strong>Email:</strong></p>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <p class="text-sm mb-0">{{ $nominee->nominee_email }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
+                                            <p class="text-sm mb-0"><strong>Reason:</strong></p>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <p class="text-sm mb-0">{{ $nominee->reason }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                @if(!$loop->last)
+                                    <hr class="my-4">
+                                @endif
+                            @endforeach
                         </div>
-                    </div>
+                    @elseif($currentStep == 2)
+                        <!-- Candidates Information -->
+                        <div class="step-content">
+                            @foreach($selectedNomination as $index => $nominee)
+                                @php
+                                    $candidate = collect($candidates)->firstWhere('candidate_id', $nominee->candidate_id);
+                                @endphp
+                                @if($candidate)
+                                    <div class="candidate-section mb-4">
+                                        <h4 class="mb-3">Candidate {{ $index + 1 }}</h4>
+                                        <div class="row mb-3">
+                                            <div class="col-md-3">
+                                                <p class="text-sm mb-0"><strong>Name:</strong></p>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <p class="text-sm mb-0">{{ $candidate->candidate_name }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-md-3">
+                                                <p class="text-sm mb-0"><strong>Position:</strong></p>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <p class="text-sm mb-0">{{ $candidate->position }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-md-3">
+                                                <p class="text-sm mb-0"><strong>Status:</strong></p>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <p class="text-sm mb-0">{{ $candidate->status }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-md-3">
+                                                <p class="text-sm mb-0"><strong>Department:</strong></p>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <p class="text-sm mb-0">{{ $candidate->job }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+                    @endif
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-sm" wire:click="closeViewModal">Close</button>
+                    @if($currentStep == 1)
+                        <button type="button" class="btn btn-secondary" wire:click="closeViewModal">Close</button>
+                    @else
+                        <button type="button" class="btn btn-secondary" wire:click="previousStep">Back</button>
+                    @endif
+                    
+                    @if($currentStep < 2)
+                        <button type="button" class="btn btn-primary" wire:click="nextStep">Next</button>
+                    @else
+                        <button type="button" class="btn btn-secondary" wire:click="closeViewModal">Close</button>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
     <div class="modal-backdrop fade show modal-backdrop-custom"></div>
     @endif
-
+</div> 
 </div> 

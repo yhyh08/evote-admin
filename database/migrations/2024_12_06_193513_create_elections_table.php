@@ -14,14 +14,16 @@ return new class extends Migration
         Schema::create('elections', function (Blueprint $table) {
             $table->id('election_id');
             $table->string('election_topic');
+            $table->string('type');
+            $table->string('position');
             $table->text('description');
             $table->date('start_date');
             $table->date('end_date');
             $table->string('nominate_period_start');
             $table->string('nominate_period_end');
-            $table->string('position');
+            $table->date('result_release_date');
             $table->string('status');
-            $table->string('type');
+            $table->integer('org_id');
             $table->timestamps();
         });
     }

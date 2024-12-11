@@ -20,14 +20,21 @@ class Election extends Model
         'end_date',
         'nominate_period_start',
         'nominate_period_end',
-        'status'
+        'result_release_date',
+        'status',
+        'org_id'
     ];
 
-    // Add date casting
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',
         'nominate_period_start' => 'date',
         'nominate_period_end' => 'date',
+        'result_release_date' => 'date',
     ];
+
+    public function organization()
+    {
+        return $this->belongsTo(Organization::class, 'org_id', 'org_id');
+    }
 } 

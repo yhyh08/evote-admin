@@ -13,12 +13,22 @@ return new class extends Migration
     {
         Schema::create('candidates', function (Blueprint $table) {
             $table->id('candidate_id');
-            $table->string('category');
+            $table->string('candidate_name');
+            $table->string('candidate_image');
+            $table->string('candidate_phone');
+            $table->string('candidate_email');
+            $table->string('candidate_gender');
+            $table->string('candidate_ic');
+            $table->string('candidate_dob');
+            $table->string('candidate_address');
             $table->string('nationality');
             $table->string('religion');
             $table->string('job');
             $table->decimal('income', 10, 2);
             $table->string('marriage_status');
+            $table->string('position');
+            $table->string('short_biography');
+            $table->string('manifesto');
             $table->string('status');
             $table->date('receive_date');
             $table->date('approve_date');

@@ -23,5 +23,12 @@ class DatabaseSeeder extends Seeder
             'phone' => '0123456789',
             'password' => Hash::make('password')
         ]);
+
+        $this->call([
+            ElectionCommitteeSeeder::class,
+            ElectionSeeder::class,
+            OrganizationSeeder::class,
+            NominationSeeder::class,
+        ]);
     }
 }

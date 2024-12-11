@@ -10,7 +10,7 @@
                         <div class="card-header py-4 px-3">
                             <div class="d-flex flex-row justify-content-between">
                                 <div>
-                                    <h5 class="mb-0">Election</h5>
+                                    <h5 class="mb-0">Candidate</h5>
                                 </div>
                                 <a href="#" wire:click="create" class="btn bg-gradient-primary btn-sm mb-0" type="button">
                                     <i class="fa-solid fa-circle-plus me-2 btn-add"></i>Add
@@ -24,9 +24,6 @@
                                         <tr>
                                             <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">No</th>
                                             <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">Topic</th>
-                                            <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">Organization</th>
-                                            <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">Type</th>
-                                            <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">Position</th>
                                             <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">Start Date</th>
                                             <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">End Date</th>
                                             <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">Status</th>
@@ -43,39 +40,13 @@
                                                     <p class="text-xs font-weight-bold mb-0">{{ $election->election_topic }}</p>
                                                 </td>
                                                 <td class="ps-3">
-                                                    <p class="text-xs font-weight-bold mb-0">
-                                                        @if($election->organization)
-                                                            {{ $election->organization->org_name }}
-                                                        @else
-                                                            <span class="text-danger">No Organization</span>
-                                                        @endif
-                                                    </p>
-                                                </td>
-                                                <td class="ps-3">
-                                                    <p class="text-xs font-weight-bold mb-0">
-                                                        @switch($election->type)
-                                                            @case('1')
-                                                                General
-                                                                @break
-                                                            @case('0')
-                                                                Special
-                                                                @break
-                                                            @default
-                                                                {{ $election->type }}
-                                                        @endswitch
-                                                    </p>
-                                                </td>
-                                                <td class="ps-3">
-                                                    <p class="text-xs font-weight-bold mb-0">{{ $election->position }}</p>
-                                                </td>
-                                                <td class="ps-3">
                                                     <p class="text-xs font-weight-bold mb-0">{{ date('Y-m-d', strtotime($election->start_date)) }}</p>
                                                 </td>
                                                 <td class="ps-3">
                                                     <p class="text-xs font-weight-bold mb-0">{{ date('Y-m-d', strtotime($election->end_date)) }}</p>
                                                 </td>
                                                 <td class="ps-3">
-                                                    <span class="text-xs font-weight-bold mb-0">{{ $election->status ? 'Active' : 'Inactive' }}</span>
+                                                    <span class="text-xs font-weight-bold mb-0">{{ $election->status }}</span>
                                                 </td>
                                                 <td class="ps-3">
                                                     <a href="#" wire:click.prevent="edit({{ $election->election_id }})" class="me-3" data-bs-toggle="tooltip" data-bs-original-title="Edit election">
@@ -91,7 +62,7 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="9" class="text-center">
+                                                <td colspan="6" class="text-center">
                                                     <p class="text-s font-weight-bold mb-0">No election found</p>
                                                 </td>
                                             </tr>
@@ -131,8 +102,8 @@
                         <label>Type</label>
                         <select wire:model="type" class="form-control" @if($isView) disabled @endif>
                             <option value="">Select Type</option>
-                            <option value="1">General</option>
-                            <option value="0">Special</option>
+                            <option value="general">General</option>
+                            <option value="special">Special</option>
                         </select>
                         @error('type') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
@@ -192,22 +163,10 @@
                         <label>Status</label>
                         <select wire:model="status" class="form-control" @if($isView) disabled @endif>
                             <option value="">Select Status</option>
-                            <option value="1">Active</option>
-                            <option value="0">Inactive</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
                         </select>
                         @error('status') <span class="text-danger">{{ $message }}</span> @enderror
-                    </div>
-                    <div class="mb-3">
-                        <label>Organization</label>
-                        <select wire:model="org_id" class="form-control" @if($isView) disabled @endif>
-                            <option value="">Select Organization</option>
-                            @foreach($organizations as $organization)
-                                <option value="{{ $organization->org_id }}" {{ $org_id == $organization->org_id ? 'selected' : '' }}>
-                                    {{ $organization->org_name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('org_id') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                 </div>
                 <div class="modal-footer">

@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Admin;
 
 use Livewire\Component;
 use App\Models\Election;
+use App\Models\Organization;
 
 class ElectionController extends Component
 {
@@ -12,6 +13,7 @@ class ElectionController extends Component
     public $isOpen = false;
     public $isView = false;
     public $confirmingDeletion = false;
+    public $org_id;
 
     protected $rules = [
         'election_topic' => 'required|min:3',
@@ -22,7 +24,8 @@ class ElectionController extends Component
         'nominate_period_end' => 'required|date|after_or_equal:nominate_period_start',
         'start_date' => 'required|date|after_or_equal:nominate_period_end',
         'end_date' => 'required|date|after_or_equal:start_date',
-        'status' => 'required'
+        'status' => 'required',
+        'org_id' => 'required'
     ];
 
     protected $messages = [
@@ -44,7 +47,8 @@ class ElectionController extends Component
     public function render()
     {
         return view('livewire.admin.election', [
-            'elections' => Election::latest()->get()
+            'elections' => Election::with('organization')->latest()->get(),
+            'organizations' => Organization::orderBy('org_name')->get()
         ]);
     }
 
@@ -56,7 +60,18 @@ class ElectionController extends Component
 
     public function store()
     {
-        $this->validate();
+        $this->validate([
+            'election_topic' => 'required|min:3',
+            'type' => 'required',
+            'position' => 'required',
+            'description' => 'required|min:10',
+            'nominate_period_start' => 'required|date',
+            'nominate_period_end' => 'required|date|after_or_equal:nominate_period_start',
+            'start_date' => 'required|date|after_or_equal:nominate_period_end',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'status' => 'required',
+            'org_id' => 'required'
+        ]);
 
         Election::create([
             'election_topic' => $this->election_topic,
@@ -67,7 +82,8 @@ class ElectionController extends Component
             'end_date' => $this->end_date,
             'nominate_period_start' => $this->nominate_period_start,
             'nominate_period_end' => $this->nominate_period_end,
-            'status' => $this->status
+            'status' => $this->status,
+            'org_id' => $this->org_id
         ]);
 
         session()->flash('success', 'Election Created Successfully.');
@@ -78,9 +94,8 @@ class ElectionController extends Component
 
     public function edit($id)
     {
-        $election = Election::findOrFail($id);
+        $election = Election::with('organization')->findOrFail($id);
         
-        // Reset any previous state
         $this->resetInputFields();
         
         $this->election_id = $election->election_id;
@@ -88,22 +103,33 @@ class ElectionController extends Component
         $this->type = $election->type;
         $this->position = $election->position;
         $this->description = $election->description;
-        
-        // Format dates properly
         $this->nominate_period_start = date('Y-m-d', strtotime($election->nominate_period_start));
         $this->nominate_period_end = date('Y-m-d', strtotime($election->nominate_period_end));
         $this->start_date = date('Y-m-d', strtotime($election->start_date));
         $this->end_date = date('Y-m-d', strtotime($election->end_date));
-        
         $this->status = $election->status;
+        $this->org_id = $election->org_id;
+        
+        \Log::info('Election type:', ['type' => $this->type]);
         
         $this->openModal();
     }
 
     public function update()
     {
-        $this->validate();
-      
+        $this->validate([
+            'election_topic' => 'required|min:3',
+            'type' => 'required',
+            'position' => 'required',
+            'description' => 'required|min:10',
+            'nominate_period_start' => 'required|date',
+            'nominate_period_end' => 'required|date|after_or_equal:nominate_period_start',
+            'start_date' => 'required|date|after_or_equal:nominate_period_end',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'status' => 'required',
+            'org_id' => 'required'
+        ]);
+
         Election::where('election_id', $this->election_id)->update([
             'election_topic' => $this->election_topic,
             'type' => $this->type,
@@ -113,7 +139,8 @@ class ElectionController extends Component
             'end_date' => $this->end_date,
             'nominate_period_start' => $this->nominate_period_start,
             'nominate_period_end' => $this->nominate_period_end,
-            'status' => $this->status
+            'status' => $this->status,
+            'org_id' => $this->org_id
         ]);
 
         session()->flash('success', 'Election Updated Successfully.');
@@ -128,23 +155,20 @@ class ElectionController extends Component
         // Reset any previous state
         $this->resetInputFields();
         
-        // Set the view mode first
         $this->isView = true;
         
-        // Assign values
         $this->election_id = $election->election_id;
         $this->election_topic = $election->election_topic;
         $this->type = $election->type;
         $this->position = $election->position;
         $this->description = $election->description;
-        
-        // Format dates properly
         $this->nominate_period_start = date('Y-m-d', strtotime($election->nominate_period_start));
         $this->nominate_period_end = date('Y-m-d', strtotime($election->nominate_period_end));
         $this->start_date = date('Y-m-d', strtotime($election->start_date));
         $this->end_date = date('Y-m-d', strtotime($election->end_date));
-        
+        $this->result_release_date = date('Y-m-d', strtotime($election->result_release_date));
         $this->status = $election->status;
+        $this->org_id = $org->org_id;
 
         $this->openModal();
     }
@@ -172,6 +196,7 @@ class ElectionController extends Component
         $this->end_date = '';
         $this->nominate_period_start = '';
         $this->nominate_period_end = '';
+        $this->result_release_date = '';
         $this->status = '';
         $this->election_id = null;
         $this->isView = false;

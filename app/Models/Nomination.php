@@ -11,4 +11,8 @@ class Nomination extends Model
 
     protected $primaryKey = 'nominee_id';
 
+    public function election()
+    {
+        return $this->belongsTo(Election::class, 'election_id', 'election_id');
+    }
 }

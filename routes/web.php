@@ -55,6 +55,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/election', ElectionController::class)->name('election');
     Route::get('/nomination', NominationController::class)->name('nomination');
     Route::get('/organization', OrganizationController::class)->name('organization');
+    // Route::get('/candidate', NominationController::class)->name('nomination');
     Route::get('/voting-eligibility', VotingEligibilityController::class)->name('voting-eligibility');
     Route::get('/result', ResultController::class)->name('result');
     Route::get('/report', ReportController::class)->name('report');
