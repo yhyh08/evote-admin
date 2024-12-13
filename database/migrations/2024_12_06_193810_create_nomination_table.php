@@ -16,8 +16,6 @@ return new class extends Migration
             $table->string('nominee_name');
             $table->string('nominee_phone');
             $table->string('nominee_email');
-            $table->string('status');
-            $table->date('status_date');
             $table->string('reason');
             $table->foreignId('election_id');
             $table->foreignId('candidate_id');

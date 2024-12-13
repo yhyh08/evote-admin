@@ -13,15 +13,16 @@ return new class extends Migration
     {
         Schema::create('candidate_docs', function (Blueprint $table) {
             $table->id('cand_doc_id');
-            $table->string('title');
+            $table->string('document');
             $table->text('description');
-            $table->string('uploadFile');
+            $table->string('status');
             $table->foreignId('candidate_id');
             $table->timestamps();
         });
     }
 
     /**
+     * 
      * Reverse the migrations.
      */
     public function down(): void

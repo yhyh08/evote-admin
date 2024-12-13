@@ -5,74 +5,127 @@ namespace App\Http\Livewire\Admin;
 use Livewire\Component;
 use App\Models\Nomination;
 use App\Models\Candidate;
-use Illuminate\Support\Facades\DB;
+use App\Models\Election;
+use App\Models\CandidateDocs;
 
 class NominationController extends Component
 {
-    public $confirmingDeletion = false;
-    public $nominationToDelete;
     public $viewingNomination = false;
-    public $selectedNomination = null;
     public $currentStep = 1;
+    public $selectedNomination;
+    public $documentStatus = [];
+    public $showRejectModal = false;
+    public $rejectReason = '';
+    public $currentCandidateId = null;
+    public $currentDocumentId = null;
 
     public function render()
     {
+        $nominations = Nomination::with(['election', 'candidate'])
+            ->orderBy('election_id')
+            ->get()
+            ->groupBy('election_id');
+
         return view('livewire.admin.nomination', [
-            'nominations' => Nomination::with(['election'])->get(),
+            'nominations' => $nominations,
+            'candidates' => Candidate::all()
         ]);
     }
 
-    public function confirmDelete($id)
+    public function viewNomination($electionId)
     {
-        $this->nominationToDelete = $id;
-        $this->confirmingDeletion = true;
-    }
-
-    public function deleteNomination()
-    {
-        $nomination = Nomination::findOrFail($this->nominationToDelete);
-        $nomination->delete();
-        
-        $this->confirmingDeletion = false;
-        $this->nominationToDelete = null;
-        
-        session()->flash('message', 'Nomination deleted successfully.');
-    }
-
-    public function cancelDelete()
-    {
-        $this->confirmingDeletion = false;
-        $this->nominationToDelete = null;
-    }
-    
-    public function viewNomination($election_id)
-    {
-        $this->selectedNomination = Nomination::with('election')
-            ->where('election_id', $election_id)
+        $nominations = Nomination::with(['candidate.documents', 'election'])
+            ->where('election_id', $electionId)
             ->get();
+
+        $groupedNominations = $nominations->mapToGroups(function ($nomination) {
+            return [$nomination->candidate_id => $nomination];
+        });
+
+        $this->selectedNomination = $groupedNominations;
         $this->viewingNomination = true;
         $this->currentStep = 1;
+
+        // Initialize document statuses
+        foreach ($nominations as $nomination) {
+            if ($nomination->candidate && $nomination->candidate->documents) {
+                foreach ($nomination->candidate->documents as $document) {
+                    $this->documentStatus[$document->id] = $document->status;
+                }
+            }
+        }
+    }
+
+    public function nextStep()
+    {
+        if ($this->currentStep < 4) {
+            $this->currentStep++;
+        }
+    }
+
+    public function previousStep()
+    {
+        if ($this->currentStep > 1) {
+            $this->currentStep--;
+        }
     }
 
     public function closeViewModal()
     {
         $this->viewingNomination = false;
+        $this->currentStep = 1;
         $this->selectedNomination = null;
+        $this->documentStatus = [];
     }
 
-    public function viewCandidate($candidateId)
+    public function downloadDocument($documentId)
     {
-        // Add logic to view candidate details
-        // This could open a modal or redirect to a candidate detail page
+        // Add download logic
     }
 
-    public function nextStep()
+    public function viewDocument($documentId)
     {
-        $this->currentStep++;
+        // Add view logic
     }
 
-    public function previousStep()
+    public function showRejectModal($documentId = null)
     {
-        $this->currentStep--;
+        $this->showRejectModal = true;
+        $this->currentDocumentId = $documentId;
+    }
+
+    public function closeRejectModal()
+    {
+        $this->showRejectModal = false;
+        $this->rejectReason = '';
+        $this->currentDocumentId = null;
+    }
+
+    public function rejectDocument()
+    {
+        $this->validate([
+            'rejectReason' => 'required|min:10',
+        ]);
+
+        $document = CandidateDocs::find($this->currentDocumentId);
+        if ($document) {
+            $document->update([
+                'status' => 'Reject',
+                'reject_reason' => $this->rejectReason
+            ]);
+            
+            session()->flash('success', 'Document has been rejected.');
+        }
+
+        $this->closeRejectModal();
+    }
+
+    public function updateDocumentStatus($documentId, $status)
+    {
+        $document = CandidateDocs::find($documentId);
+        if ($document) {
+            $document->update(['status' => $status]);
+            session()->flash('success', 'Document status updated successfully.');
+        }
     }
 }

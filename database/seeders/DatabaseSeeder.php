@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
             ElectionSeeder::class,
             OrganizationSeeder::class,
             NominationSeeder::class,
+            CandidateDocsSeeder::class,
         ]);
     }
 }

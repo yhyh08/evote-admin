@@ -33,6 +33,8 @@ return new class extends Migration
             $table->date('receive_date');
             $table->date('approve_date');
             $table->string('sign');
+            $table->json('nominee_id');
+            $table->json('cand_doc_id');
             $table->timestamps();
         });
     }
