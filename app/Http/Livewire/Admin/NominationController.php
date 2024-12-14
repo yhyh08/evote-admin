@@ -7,30 +7,20 @@ use App\Models\Nomination;
 use App\Models\Candidate;
 use App\Models\Election;
 use App\Models\CandidateDocs;
+use Livewire\WithPagination;
 
 class NominationController extends Component
 {
+    use WithPagination;
+
     public $viewingNomination = false;
-    public $currentStep = 1;
-    public $selectedNomination;
-    public $documentStatus = [];
     public $showRejectModal = false;
     public $rejectReason = '';
     public $currentCandidateId = null;
-    public $currentDocumentId = null;
+    public $currentStep = 1;
+    public $selectedNomination;
 
-    public function render()
-    {
-        $nominations = Nomination::with(['election', 'candidate'])
-            ->orderBy('election_id')
-            ->get()
-            ->groupBy('election_id');
-
-        return view('livewire.admin.nomination', [
-            'nominations' => $nominations,
-            'candidates' => Candidate::all()
-        ]);
-    }
+    protected $listeners = ['refreshComponent' => '$refresh'];
 
     public function viewNomination($electionId)
     {
@@ -45,15 +35,6 @@ class NominationController extends Component
         $this->selectedNomination = $groupedNominations;
         $this->viewingNomination = true;
         $this->currentStep = 1;
-
-        // Initialize document statuses
-        foreach ($nominations as $nomination) {
-            if ($nomination->candidate && $nomination->candidate->documents) {
-                foreach ($nomination->candidate->documents as $document) {
-                    $this->documentStatus[$document->id] = $document->status;
-                }
-            }
-        }
     }
 
     public function nextStep()
@@ -75,57 +56,96 @@ class NominationController extends Component
         $this->viewingNomination = false;
         $this->currentStep = 1;
         $this->selectedNomination = null;
-        $this->documentStatus = [];
     }
 
-    public function downloadDocument($documentId)
+    public function closeViewAndShowReject($candidateId)
     {
-        // Add download logic
-    }
-
-    public function viewDocument($documentId)
-    {
-        // Add view logic
-    }
-
-    public function showRejectModal($documentId = null)
-    {
+        $this->currentCandidateId = $candidateId;
+        $this->viewingNomination = false;
         $this->showRejectModal = true;
-        $this->currentDocumentId = $documentId;
     }
 
     public function closeRejectModal()
     {
         $this->showRejectModal = false;
         $this->rejectReason = '';
-        $this->currentDocumentId = null;
+        $this->viewingNomination = true;
+        $this->dispatch('refreshComponent');
     }
 
-    public function rejectDocument()
+    public function rejectCandidate()
     {
         $this->validate([
             'rejectReason' => 'required|min:10',
+        ], [
+            'rejectReason.required' => 'Please provide a reason for rejection.',
+            'rejectReason.min' => 'The rejection reason must be at least 10 characters.',
         ]);
 
-        $document = CandidateDocs::find($this->currentDocumentId);
-        if ($document) {
-            $document->update([
-                'status' => 'Reject',
-                'reject_reason' => $this->rejectReason
-            ]);
-            
-            session()->flash('success', 'Document has been rejected.');
-        }
+        try {
+            $candidate = Candidate::find($this->currentCandidateId);
+            if ($candidate) {
+                $candidate->update([
+                    'status' => 'Rejected',
+                    'reason' => $this->rejectReason
+                ]);
 
-        $this->closeRejectModal();
+                CandidateDocs::where('candidate_id', $this->currentCandidateId)
+                    ->update(['status' => 'Reject']);
+
+                session()->flash('success', 'Candidate has been rejected successfully.');
+                
+                $this->showRejectModal = false;
+                $this->rejectReason = '';
+                $this->viewingNomination = true;
+                $this->dispatch('refreshComponent');
+            }
+        } catch (\Exception $e) {
+            session()->flash('error', 'Failed to reject candidate. Please try again.');
+        }
     }
 
-    public function updateDocumentStatus($documentId, $status)
+    public function approveCandidate($candidateId)
+    {
+        try {
+            $candidate = Candidate::find($candidateId);
+            if ($candidate) {
+                $candidate->update(['status' => 'Approved']);
+                CandidateDocs::where('candidate_id', $candidateId)
+                    ->update(['status' => 'Approve']);
+                session()->flash('success', 'Candidate has been approved successfully.');
+            }
+        } catch (\Exception $e) {
+            session()->flash('error', 'Failed to approve candidate. Please try again.');
+        }
+    }
+
+    public function downloadDocument($documentId)
     {
         $document = CandidateDocs::find($documentId);
         if ($document) {
-            $document->update(['status' => $status]);
-            session()->flash('success', 'Document status updated successfully.');
+            // Add your download logic here
         }
+    }
+
+    public function viewDocument($documentId)
+    {
+        $document = CandidateDocs::find($documentId);
+        if ($document) {
+            // Add your view logic here
+        }
+    }
+
+    public function render()
+    {
+        $nominations = Nomination::with(['election', 'candidate'])
+            ->orderBy('election_id')
+            ->get()
+            ->groupBy('election_id');
+
+        return view('livewire.admin.nomination', [
+            'nominations' => $nominations,
+            'candidates' => Candidate::all()
+        ]);
     }
 }

@@ -62,7 +62,7 @@
                                                     <a href="#" wire:click.prevent="viewNomination({{ $election_id }})" 
                                                     class="me-3" data-bs-toggle="tooltip" 
                                                     data-bs-original-title="View details">
-                                                        <i class="fa-solid fa-eye text-secondary"></i>
+                                                        <i class="fa-solid fa-file-lines text-secondary"></i>
                                                     </a>
                                                 </td>
                                             </tr>
@@ -114,7 +114,7 @@
                         <div class="step-content">
                             @forelse($selectedNomination as $candidateId => $nominations)
                                 <div class="nominee-section mb-4">
-                                    <h4 class="mb-3">Nominations for {{ $nominations->first()->candidate->candidate_name ?? 'N/A' }}</h4>
+                                    <h5 class="mb-3">Nominations for {{ $nominations->first()->candidate->candidate_name ?? 'N/A' }}</h5>
                                     @foreach($nominations as $nomination)
                                         <div class="nominee-details mb-3">
                                             <div class="row mb-3">
@@ -174,7 +174,7 @@
                                     <div class="candidate-section mb-4">
                                         <div class="card">
                                             <div class="card-header d-flex justify-content-between align-items-center pb-0">
-                                                <h4>{{ $candidate->position ?? 'Candidate Details' }}</h4>
+                                                <h5>{{ $candidate->position ?? 'Candidate Details' }}</h5>
                                                 <span class="badge bg-{{ $candidate->status === 'Approved' ? 'success' : 'warning' }}">
                                                 {{ $candidate->status }}
                                             </span>
@@ -255,7 +255,7 @@
                                         <div class="card mb-3">
                                             <div class="card-body">
                                                 <div class="mb-4">
-                                                <h4 class="mb-2">{{ $candidate->candidate_name }}</h4>
+                                                <h5 class="mb-2">{{ $candidate->candidate_name }}</h5>
                                                     <h6 class="text-sm font-weight-bolder">Short Biography</h6>
                                                     <p class="text-sm mb-3">{{ $candidate->short_biography ?? 'No biography available.' }}</p>
                                                 </div>
@@ -282,7 +282,7 @@
                                 @if($candidate)
                                     <div class="candidate-section mb-4">
                                         <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <h4 class="mb-0">{{ $candidate->candidate_name }}'s Documents</h4>
+                                            <h5 class="mb-0">{{ $candidate->candidate_name }}'s Documents</h5>
                                             <span class="badge bg-{{ $candidate->status === 'Approved' ? 'success' : 'warning' }}">
                                                 {{ $candidate->status }}
                                             </span>
@@ -296,7 +296,6 @@
                                                                 <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">ID</th>
                                                                 <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">Document</th>
                                                                 <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">Description</th>
-                                                                <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">Status</th>
                                                                 <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">Action</th>
                                                             </tr>
                                                         </thead>
@@ -315,41 +314,18 @@
                                                                 <td class="ps-3">
                                                                     <p class="text-xs font-weight-bold mb-0">{{ $document->description }}</p>
                                                                 </td>
+                                                                
                                                                 <td class="ps-3">
-                                                                    <span class="badge bg-{{ $document->status === 'Approve' ? 'success' : ($document->status === 'Reject' ? 'danger' : 'warning') }}">
-                                                                        {{ $document->status ?: 'Pending' }}
-                                                                    </span>
-                                                                </td>
-                                                                <td class="ps-3">
-                                                                    <div class="d-flex align-items-center">
-                                                                        <button type="button" 
-                                                                                class="btn btn-success btn-sm me-2" 
-                                                                                wire:click="updateDocumentStatus({{ $document->id }}, 'Approve')">
-                                                                            Approve
-                                                                        </button>
-                                                                        <button type="button" 
-                                                                                class="btn btn-danger btn-sm me-2" 
-                                                                                wire:click="showRejectModal({{ $document->id }})">
-                                                                            Reject
-                                                                        </button>
-                                                                        <div class="dropdown">
-                                                                            <button class="btn btn-link text-secondary mb-0" data-bs-toggle="dropdown">
-                                                                                <i class="fa fa-ellipsis-v text-xs"></i>
-                                                                            </button>
-                                                                            <ul class="dropdown-menu">
-                                                                                <li>
-                                                                                    <a class="dropdown-item" href="#" wire:click.prevent="downloadDocument({{ $document->id }})">
-                                                                                        Download
-                                                                                    </a>
-                                                                                </li>
-                                                                                <li>
-                                                                                    <a class="dropdown-item" href="#" wire:click.prevent="viewDocument({{ $document->id }})">
-                                                                                        View
-                                                                                    </a>
-                                                                                </li>
-                                                                            </ul>
-                                                                        </div>
-                                                                    </div>
+                                                                    <a href="#" wire:click.prevent="viewDocument({{ $document->id }})" 
+                                                                       class="me-3" data-bs-toggle="tooltip" 
+                                                                       data-bs-original-title="View document">
+                                                                        <i class="fa-solid fa-file-lines text-secondary"></i>
+                                                                    </a>
+                                                                    <a href="#" wire:click.prevent="downloadDocument({{ $document->id }})" 
+                                                                       class="me-3" data-bs-toggle="tooltip" 
+                                                                       data-bs-original-title="Download document">
+                                                                        <i class="fa-solid fa-download text-secondary"></i>
+                                                                    </a>
                                                                 </td>
                                                             </tr>
                                                             @endforeach
@@ -357,6 +333,15 @@
                                                     </table>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <!-- Candidate-level approve/reject buttons -->
+                                        <div class="d-flex justify-content-end mt-3">
+                                            <button type="button" class="btn btn-danger me-2" wire:click.prevent="closeViewAndShowReject({{ $candidateId }})">
+                                                Reject Candidate
+                                            </button>
+                                            <button type="button" class="btn btn-success" wire:click.prevent="approveCandidate({{ $candidateId }})">
+                                                Approve Candidate
+                                            </button>
                                         </div>
                                     </div>
                                 @else
@@ -391,11 +376,11 @@
 
     <!-- Reject Reason Modal -->
     @if($showRejectModal)
-    <div class="modal fade show" tabindex="-1" role="dialog" style="display: block; z-index: 1060;">
+    <div class="modal fade show" tabindex="-1" role="dialog" style="display: block; z-index: 999999;">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Reject Candidate</h5>
+                    <h5 class="modal-title">Reject Nomination</h5>
                     <button type="button" class="btn-close" wire:click="closeRejectModal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -419,6 +404,27 @@
             </div>
         </div>
     </div>
-    <div class="modal-backdrop fade show" style="z-index: 1050;"></div>
+    <div class="modal-backdrop fade show" style="z-index: 999998;"></div>
+    @endif
+
+    <!-- Add this at the bottom of your file -->
+    <script>
+        window.addEventListener('close-modal', event => {
+            // Hide any modals
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.style.display = 'none';
+            });
+            document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+                backdrop.remove();
+            });
+        });
+    </script>
+
+    <!-- Add this for displaying success/error messages -->
+    @if (session()->has('message'))
+        <div class="alert alert-{{ session('alert-type') }} alert-dismissible fade show" role="alert">
+            {{ session('message') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
     @endif
 </div>

@@ -30,6 +30,7 @@ return new class extends Migration
             $table->string('short_biography');
             $table->string('manifesto');
             $table->string('status');
+            $table->string('reason');
             $table->date('receive_date');
             $table->date('approve_date');
             $table->string('sign');

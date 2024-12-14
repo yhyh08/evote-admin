@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id('cand_doc_id');
             $table->string('document');
             $table->text('description');
-            $table->string('status');
             $table->foreignId('candidate_id');
             $table->timestamps();
         });
