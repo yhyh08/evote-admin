@@ -78,14 +78,6 @@
                 }, 3000);
             });
         });
-
-           window.addEventListener('close-modal', event => {
-            // Example: Initialize PerfectScrollbar when a modal is shown
-            var element = document.querySelector('.your-scrollable-element');
-            if (element) {
-                new PerfectScrollbar(element);
-            }
-        });
     </script>
     
     <!-- Github buttons -->

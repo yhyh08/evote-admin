@@ -409,22 +409,18 @@
 
     <script>
         window.addEventListener('close-modal', event => {
-            // Hide any modals
             document.querySelectorAll('.modal').forEach(modal => {
                 modal.style.display = 'none';
             });
             
-            // Remove modal backdrops
             document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
                 backdrop.remove();
             });
             
-            // Remove modal-open class from body if it exists
             document.body.classList.remove('modal-open');
         });
     </script>
 
-    <!-- Add this for displaying success/error messages -->
     @if (session()->has('message'))
         <div class="alert alert-{{ session('alert-type') }} alert-dismissible fade show" role="alert">
             {{ session('message') }}

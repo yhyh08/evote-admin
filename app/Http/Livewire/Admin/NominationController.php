@@ -90,16 +90,13 @@ class NominationController extends Component
                 CandidateDocs::where('candidate_id', $this->currentCandidateId)
                     ->update(['status' => 'Reject']);
 
-                // Reset modal states and variables
                 $this->showRejectModal = false;
                 $this->rejectReason = '';
                 $this->currentCandidateId = null;
                 
-                // Show success message
                 session()->flash('message', 'Candidate has been rejected successfully.');
                 session()->flash('alert-type', 'success');
 
-                // Dispatch events
                 $this->dispatchBrowserEvent('close-modal');
                 $this->dispatch('refreshComponent');
             }
@@ -118,16 +115,13 @@ class NominationController extends Component
                 CandidateDocs::where('candidate_id', $candidateId)
                     ->update(['status' => 'Approve']);
                 
-                // Show success message
                 session()->flash('message', 'Candidate has been approved successfully.');
                 session()->flash('alert-type', 'success');
 
-                // Reset modal states and variables
                 $this->showRejectModal = false;
                 $this->rejectReason = '';
                 $this->currentCandidateId = null;
                 
-                // Dispatch events
                 $this->dispatchBrowserEvent('close-modal');
                 $this->dispatch('refreshComponent');
             }
