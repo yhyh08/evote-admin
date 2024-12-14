@@ -119,8 +119,12 @@ class NominationController extends Component
                 session()->flash('alert-type', 'success');
 
                 $this->showRejectModal = false;
-                $this->rejectReason = '';
-                $this->currentCandidateId = null;
+                $this->rejectReason = ''; 
+                $this->currentCandidateId = null; 
+                
+                $this->viewingNomination = false;
+                $this->currentStep = 1; 
+                $this->selectedNomination = null; 
                 
                 $this->dispatchBrowserEvent('close-modal');
                 $this->dispatch('refreshComponent');
