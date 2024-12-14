@@ -2292,7 +2292,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     get raw() {
       return raw;
     },
-    version: "3.14.7",
+    version: "3.14.6",
     flushAndStopDeferringMutations,
     dontAutoEvaluateFunctions,
     disableEffectScheduling,
@@ -3139,6 +3139,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       placeInDom(clone2, target, modifiers);
       skipDuringClone(() => {
         initTree(clone2);
+        clone2._x_ignore = true;
       })();
     });
     el._x_teleportPutBack = () => {
@@ -4363,7 +4364,6 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     "get": "$get",
     "set": "$set",
     "call": "$call",
-    "hook": "$hook",
     "commit": "$commit",
     "watch": "$watch",
     "entangle": "$entangle",
@@ -4458,16 +4458,6 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
   wireProperty("$refresh", (component) => component.$wire.$commit);
   wireProperty("$commit", (component) => async () => await requestCommit(component));
   wireProperty("$on", (component) => (...params) => listen2(component, ...params));
-  wireProperty("$hook", (component) => (name, callback) => {
-    let unhook = on2(name, ({ component: hookComponent, ...params }) => {
-      if (hookComponent === void 0)
-        return callback(params);
-      if (hookComponent.id === component.id)
-        return callback({ component: hookComponent, ...params });
-    });
-    component.addCleanup(unhook);
-    return unhook;
-  });
   wireProperty("$dispatch", (component) => (...params) => dispatch3(component, ...params));
   wireProperty("$dispatchSelf", (component) => (...params) => dispatchSelf(component, ...params));
   wireProperty("$dispatchTo", () => (...params) => dispatchTo(...params));
@@ -7771,8 +7761,6 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
         child.remove();
     }
     for (let child of Array.from(newHead.children)) {
-      if (child.tagName.toLowerCase() === "noscript")
-        continue;
       document.head.appendChild(child);
     }
     return Promise.all(remoteScriptsPromises);
@@ -8140,24 +8128,24 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
         let search = url.search;
         if (!search)
           return false;
-        let data2 = fromQueryString(search, key);
+        let data2 = fromQueryString(search);
         return Object.keys(data2).includes(key);
       },
       get(url, key) {
         let search = url.search;
         if (!search)
           return false;
-        let data2 = fromQueryString(search, key);
+        let data2 = fromQueryString(search);
         return data2[key];
       },
       set(url, key, value) {
-        let data2 = fromQueryString(url.search, key);
+        let data2 = fromQueryString(url.search);
         data2[key] = stripNulls(unwrap(value));
         url.search = toQueryString(data2);
         return url;
       },
       remove(url, key) {
-        let data2 = fromQueryString(url.search, key);
+        let data2 = fromQueryString(url.search);
         delete data2[key];
         url.search = toQueryString(data2);
         return url;
@@ -8193,7 +8181,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     let entries = buildQueryStringEntries(data2);
     return Object.entries(entries).map(([key, value]) => `${key}=${value}`).join("&");
   }
-  function fromQueryString(search, queryKey) {
+  function fromQueryString(search) {
     search = search.replace("?", "");
     if (search === "")
       return {};
@@ -8212,12 +8200,10 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       if (typeof value == "undefined")
         return;
       value = decodeURIComponent(value.replaceAll("+", "%20"));
-      let decodedKey = decodeURIComponent(key);
-      let shouldBeHandledAsArray = decodedKey.includes("[") && decodedKey.startsWith(queryKey);
-      if (!shouldBeHandledAsArray) {
+      if (!key.includes("[")) {
         data2[key] = value;
       } else {
-        let dotNotatedKey = decodedKey.replaceAll("[", ".").replaceAll("]", "");
+        let dotNotatedKey = key.replaceAll("[", ".").replaceAll("]", "");
         insertDotNotatedValueIntoData(dotNotatedKey, value, data2);
       }
     });

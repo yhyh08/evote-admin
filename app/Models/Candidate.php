@@ -15,6 +15,11 @@ class Candidate extends Model
         'nominee_ids' => 'array'
     ];
 
+    protected $fillable = [
+        'status',
+        'reason',
+    ];
+
     public function nominations()
     {
         return $this->hasMany(Nomination::class, 'candidate_id', 'candidate_id');

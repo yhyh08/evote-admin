@@ -78,7 +78,16 @@
                 }, 3000);
             });
         });
+
+           window.addEventListener('close-modal', event => {
+            // Example: Initialize PerfectScrollbar when a modal is shown
+            var element = document.querySelector('.your-scrollable-element');
+            if (element) {
+                new PerfectScrollbar(element);
+            }
+        });
     </script>
+    
     <!-- Github buttons -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->

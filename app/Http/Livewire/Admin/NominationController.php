@@ -77,9 +77,6 @@ class NominationController extends Component
     {
         $this->validate([
             'rejectReason' => 'required|min:10',
-        ], [
-            'rejectReason.required' => 'Please provide a reason for rejection.',
-            'rejectReason.min' => 'The rejection reason must be at least 10 characters.',
         ]);
 
         try {
@@ -93,15 +90,22 @@ class NominationController extends Component
                 CandidateDocs::where('candidate_id', $this->currentCandidateId)
                     ->update(['status' => 'Reject']);
 
-                session()->flash('success', 'Candidate has been rejected successfully.');
-                
+                // Reset modal states and variables
                 $this->showRejectModal = false;
                 $this->rejectReason = '';
-                $this->viewingNomination = true;
+                $this->currentCandidateId = null;
+                
+                // Show success message
+                session()->flash('message', 'Candidate has been rejected successfully.');
+                session()->flash('alert-type', 'success');
+
+                // Dispatch events
+                $this->dispatchBrowserEvent('close-modal');
                 $this->dispatch('refreshComponent');
             }
         } catch (\Exception $e) {
-            session()->flash('error', 'Failed to reject candidate. Please try again.');
+            session()->flash('message', 'Failed to reject candidate. Please try again.');
+            session()->flash('alert-type', 'error');
         }
     }
 
@@ -113,10 +117,23 @@ class NominationController extends Component
                 $candidate->update(['status' => 'Approved']);
                 CandidateDocs::where('candidate_id', $candidateId)
                     ->update(['status' => 'Approve']);
-                session()->flash('success', 'Candidate has been approved successfully.');
+                
+                // Show success message
+                session()->flash('message', 'Candidate has been approved successfully.');
+                session()->flash('alert-type', 'success');
+
+                // Reset modal states and variables
+                $this->showRejectModal = false;
+                $this->rejectReason = '';
+                $this->currentCandidateId = null;
+                
+                // Dispatch events
+                $this->dispatchBrowserEvent('close-modal');
+                $this->dispatch('refreshComponent');
             }
         } catch (\Exception $e) {
-            session()->flash('error', 'Failed to approve candidate. Please try again.');
+            session()->flash('message', 'Failed to approve candidate. Please try again.');
+            session()->flash('alert-type', 'error');
         }
     }
 

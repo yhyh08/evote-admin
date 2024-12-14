@@ -75,7 +75,7 @@ class NominationSeeder extends Seeder
                 'position' => 'President',
                 'short_biography' => 'Experienced leader with 10 years in community service.',
                 'manifesto' => 'Committed to technological advancement and community development.',
-                'status' => 'Approved',
+                'status' => 'Pending',
                 'reason' => '',
                 'receive_date' => Carbon::now()->subDays(30),
                 'approve_date' => Carbon::now()->subDays(15),

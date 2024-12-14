@@ -407,16 +407,20 @@
     <div class="modal-backdrop fade show" style="z-index: 999998;"></div>
     @endif
 
-    <!-- Add this at the bottom of your file -->
     <script>
         window.addEventListener('close-modal', event => {
             // Hide any modals
             document.querySelectorAll('.modal').forEach(modal => {
                 modal.style.display = 'none';
             });
+            
+            // Remove modal backdrops
             document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
                 backdrop.remove();
             });
+            
+            // Remove modal-open class from body if it exists
+            document.body.classList.remove('modal-open');
         });
     </script>
 
