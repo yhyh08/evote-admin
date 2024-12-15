@@ -334,13 +334,13 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- Candidate-level approve/reject buttons -->
+                                        <!-- Approve/reject buttons -->
                                         <div class="d-flex justify-content-end mt-3">
                                             <button type="button" class="btn btn-danger me-2" wire:click.prevent="closeViewAndShowReject({{ $candidateId }})">
-                                                Reject Candidate
+                                                Reject
                                             </button>
                                             <button type="button" class="btn btn-success" wire:click.prevent="approveCandidate({{ $candidateId }})">
-                                                Approve Candidate
+                                                Approve
                                             </button>
                                         </div>
                                     </div>
@@ -398,8 +398,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" wire:click="closeRejectModal">Cancel</button>
-                    <button type="button" class="btn btn-danger" wire:click="rejectCandidate">Confirm Reject</button>
+                    <button type="button" class="btn btn-secondary" wire:click="closeRejectModal">CANCEL</button>
+                    <button type="button" class="btn btn-danger" wire:click="rejectCandidate">CONFIRM REJECT</button>
                 </div>
             </div>
         </div>
@@ -407,24 +407,22 @@
     <div class="modal-backdrop fade show" style="z-index: 999998;"></div>
     @endif
 
-    <script>
-        window.addEventListener('close-modal', event => {
-            document.querySelectorAll('.modal').forEach(modal => {
-                modal.style.display = 'none';
-            });
-            
-            document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
-                backdrop.remove();
-            });
-            
-            document.body.classList.remove('modal-open');
-        });
-    </script>
-
-    @if (session()->has('message'))
-        <div class="alert alert-{{ session('alert-type') }} alert-dismissible fade show" role="alert">
-            {{ session('message') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
+    <x-alert type="success" />
+    <x-alert type="error" />
 </div>
+
+@push('scripts')
+<script>
+    window.addEventListener('hideModal', event => {
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.style.display = 'none';
+        });
+        document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+            backdrop.remove();
+        });
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+    });
+</script>
+@endpush

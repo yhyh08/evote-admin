@@ -16,6 +16,7 @@ class Candidate extends Model
     ];
 
     protected $fillable = [
+        'candidate_name',
         'status',
         'reason',
     ];

@@ -70,7 +70,8 @@ class NominationController extends Component
         $this->showRejectModal = false;
         $this->rejectReason = '';
         $this->viewingNomination = true;
-        $this->dispatch('refreshComponent');
+        $this->currentStep = 4;
+        $this->dispatch('closeModal');
     }
 
     public function rejectCandidate()
@@ -81,28 +82,36 @@ class NominationController extends Component
 
         try {
             $candidate = Candidate::find($this->currentCandidateId);
-            if ($candidate) {
-                $candidate->update([
+            
+            if (!$candidate) {
+                session()->flash('error', 'Candidate not found: ' . $this->currentCandidateId);
+                return;
+            }
+
+            try {
+                $updateResult = $candidate->update([
                     'status' => 'Rejected',
                     'reason' => $this->rejectReason
                 ]);
 
-                CandidateDocs::where('candidate_id', $this->currentCandidateId)
-                    ->update(['status' => 'Reject']);
+                if (!$updateResult) {
+                    session()->flash('error', 'Failed to update candidate status');
+                    return;
+                }
 
                 $this->showRejectModal = false;
                 $this->rejectReason = '';
                 $this->currentCandidateId = null;
                 
-                session()->flash('message', 'Candidate has been rejected successfully.');
-                session()->flash('alert-type', 'success');
+                session()->flash('success', 'Candidate rejected successfully');
 
-                $this->dispatchBrowserEvent('close-modal');
-                $this->dispatch('refreshComponent');
+            } catch (\Exception $e) {
+                session()->flash('error', 'Update error: ' . $e->getMessage());
+                return;
             }
+
         } catch (\Exception $e) {
-            session()->flash('message', 'Failed to reject candidate. Please try again.');
-            session()->flash('alert-type', 'error');
+            session()->flash('error', 'Error: ' . $e->getMessage());
         }
     }
 
@@ -111,27 +120,29 @@ class NominationController extends Component
         try {
             $candidate = Candidate::find($candidateId);
             if ($candidate) {
-                $candidate->update(['status' => 'Approved']);
-                CandidateDocs::where('candidate_id', $candidateId)
-                    ->update(['status' => 'Approve']);
-                
-                session()->flash('message', 'Candidate has been approved successfully.');
-                session()->flash('alert-type', 'success');
+                $updateResult = $candidate->update([
+                    'status' => 'Approved'
+                ]);
 
-                $this->showRejectModal = false;
-                $this->rejectReason = ''; 
-                $this->currentCandidateId = null; 
-                
+                if (!$updateResult) {
+                    session()->flash('error', 'Failed to update candidate status');
+                    return;
+                }
+
                 $this->viewingNomination = false;
-                $this->currentStep = 1; 
-                $this->selectedNomination = null; 
+                $this->currentStep = 1;
+                $this->selectedNomination = null;
+                $this->currentCandidateId = null;
+
+                session()->flash('success', 'Candidate has been approved successfully.');
                 
-                $this->dispatchBrowserEvent('close-modal');
-                $this->dispatch('refreshComponent');
+                return redirect()->route('nomination');
+
+            } else {
+                session()->flash('error', 'Candidate not found.');
             }
         } catch (\Exception $e) {
-            session()->flash('message', 'Failed to approve candidate. Please try again.');
-            session()->flash('alert-type', 'error');
+            session()->flash('error', 'Failed to approve candidate. Error: ' . $e->getMessage());
         }
     }
 
