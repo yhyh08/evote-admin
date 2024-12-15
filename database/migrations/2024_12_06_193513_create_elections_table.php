@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('nominate_period_end');
             $table->date('result_release_date');
             $table->string('status');
-            $table->integer('org_id');
+            $table->foreignId('org_id');
             $table->timestamps();
         });
     }

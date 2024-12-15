@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('voting_eligibility', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users');
-            $table->boolean('is_eligible');
+            $table->string('name');
+            $table->string('email');
+            $table->string('phone');
+            $table->foreignId('org_id');
             $table->timestamps();
         });
     }
