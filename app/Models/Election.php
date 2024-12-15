@@ -30,6 +30,6 @@ class Election extends Model
 
     public function organization()
     {
-        return $this->belongsTo(Organization::class);
+        return $this->belongsTo(Organization::class, 'org_id', 'org_id');
     }
 } 

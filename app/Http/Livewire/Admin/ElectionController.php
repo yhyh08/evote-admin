@@ -46,8 +46,9 @@ class ElectionController extends Component
 
     public function render()
     {
+        $elections = Election::with('organization')->get();
         return view('livewire.admin.election', [
-            'elections' => Election::with('organization')->latest()->get(),
+            'elections' => $elections,
             'organizations' => Organization::orderBy('org_name')->get()
         ]);
     }
@@ -168,7 +169,7 @@ class ElectionController extends Component
         $this->end_date = date('Y-m-d', strtotime($election->end_date));
         $this->result_release_date = date('Y-m-d', strtotime($election->result_release_date));
         $this->status = $election->status;
-        $this->org_id = $org->org_id;
+        $this->org_id = $election->org_id;
 
         $this->openModal();
     }
