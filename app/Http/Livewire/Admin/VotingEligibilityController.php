@@ -52,9 +52,9 @@ class VotingEligibilityController extends Component
             $duplicatePhones = $import->getDuplicatePhones();
             
             if (count($duplicatePhones) > 0) {
-                $this->errorMessage = 'The following phones are already registered: <br>' . 
+                $this->errorMessage = 'The following phones are already uploaded: ' . 
                     collect($duplicatePhones)->map(function($phone) {
-                        return "<span class='badge bg-danger'>{$phone}</span>";
+                        return "{$phone}";
                     })->implode(' ');
             } else {
                 session()->flash('success', 'Voter list imported successfully!');

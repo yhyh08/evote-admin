@@ -175,6 +175,11 @@ body.modal-open {
     border-color: #f5c2c7;
 }
 
+.alert-fixed{
+    margin-left: 1.3rem !important;
+    margin-right: -1.3rem !important;
+}
+
 .alert-dismissible {
     padding-right: 1rem;
 }

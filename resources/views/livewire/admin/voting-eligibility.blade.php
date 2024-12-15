@@ -4,25 +4,25 @@
             @if ($errorMessage)
                 <div class="row mb-4">
                     <div class="col-12">
-                        <div class="alert alert-danger" role="alert">
+                        <div class="alert alert-danger alert-fixed" role="alert">
                             {!! $errorMessage !!}
                         </div>
                     </div>
                 </div>
             @endif
             
-            <!-- Import Section -->
             <div class="row mb-4">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
                             <h5 class="mb-0">Import Eligible Voters</h5>
                         </div>
-                        <div class="card-body">
-                            @if (session()->has('success'))
-                                <x-alert type="success" :message="session('success')" />
-                            @endif
 
+                        @if (session()->has('success'))
+                            <x-alert type="success" :message="session('success')" />
+                        @endif
+
+                        <div class="card-body">
                             <form wire:submit.prevent="import">
                                 <div class="mb-3">
                                     <label for="org_id" class="form-label">Organization</label>
@@ -39,7 +39,7 @@
 
                                 <div class="mb-3">
                                     <label for="file" class="form-label">Excel File</label>
-                                    <input type="file" class="form-control" wire:model="file" id="file">
+                                    <input type="file" class="form-control" wire:model.defer="file" id="file">
                                     @error('file') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
 
@@ -50,7 +50,7 @@
                 </div>
             </div>
 
-            <!-- Voter List Section -->
+            <!-- Voter List -->
             <div class="row">
                 <div class="col-12">
                     <div class="card">
@@ -76,7 +76,6 @@
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Phone</th>
-                                        <th>Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -87,11 +86,6 @@
                                             <td>{{ $voter->name }}</td>
                                             <td>{{ $voter->email }}</td>
                                             <td>{{ $voter->phone }}</td>
-                                            <td>
-                                                <span class="badge bg-{{ $voter->is_active ? 'success' : 'danger' }}">
-                                                    {{ $voter->is_active ? 'Active' : 'Inactive' }}
-                                                </span>
-                                            </td>
                                         </tr>
                                     @empty
                                         <tr>
