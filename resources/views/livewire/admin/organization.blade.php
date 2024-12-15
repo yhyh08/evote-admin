@@ -175,7 +175,7 @@
 
     <div class="modal fade @if($viewMode) show @endif" tabindex="-1" role="dialog" 
         style="display: @if($viewMode) block @else none @endif">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 @if($selectedOrg)
                 <div class="modal-header">

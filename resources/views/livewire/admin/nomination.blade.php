@@ -114,7 +114,7 @@
                         <div class="step-content">
                             @forelse($selectedNomination as $candidateId => $nominations)
                                 <div class="nominee-section mb-4">
-                                    <h5 class="mb-3">Nominations for {{ $nominations->first()->candidate->candidate_name ?? 'N/A' }}</h5>
+                                    <h5 class="mb-3">Nomininee Information</h5>
                                     @foreach($nominations as $nomination)
                                         <div class="nominee-details mb-3">
                                             <div class="row mb-3">
