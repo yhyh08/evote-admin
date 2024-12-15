@@ -55,9 +55,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/election', ElectionController::class)->name('election');
     Route::get('/nomination', NominationController::class)->name('nomination');
     Route::get('/organization', OrganizationController::class)->name('organization');
-    // Route::get('/candidate', NominationController::class)->name('nomination');
     Route::get('/voting-eligibility', VotingEligibilityController::class)->name('voting-eligibility');
-    Route::get('/result', ResultController::class)->name('result');
+
+    Route::get('/result', App\Http\Livewire\Admin\ResultController::class)->name('result');
+    Route::get('/result/{election}/show', App\Http\Livewire\Admin\ResultShow::class)->name('result.show');
+
     Route::get('/report', ReportController::class)->name('report');
     Route::get('/settings', SettingsController::class)->name('settings');
     
@@ -69,7 +71,4 @@ Route::middleware('auth')->group(function () {
     Route::get('/rtl', Rtl::class)->name('rtl');
     Route::get('/laravel-user-profile', UserProfile::class)->name('user-profile');
     Route::get('/laravel-user-management', UserManagement::class)->name('user-management');
-
-    // Route::get('/nomination/{electionId}/view', \App\Http\Livewire\Admin\NominationViewController::class)->name('nomination-view');
 });
-

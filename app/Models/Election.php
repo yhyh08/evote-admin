@@ -2,15 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Election extends Model
 {
-    use HasFactory;
-
-    protected $primaryKey = 'election_id';
-
     protected $fillable = [
         'election_topic',
         'type',
@@ -20,21 +15,21 @@ class Election extends Model
         'end_date',
         'nominate_period_start',
         'nominate_period_end',
-        'result_release_date',
         'status',
         'org_id'
     ];
 
     protected $casts = [
-        'start_date' => 'date',
-        'end_date' => 'date',
-        'nominate_period_start' => 'date',
-        'nominate_period_end' => 'date',
-        'result_release_date' => 'date',
+        'start_date' => 'datetime',
+        'end_date' => 'datetime',
+        'nominate_period_start' => 'datetime',
+        'nominate_period_end' => 'datetime'
     ];
+
+    protected $primaryKey = 'election_id';
 
     public function organization()
     {
-        return $this->belongsTo(Organization::class, 'org_id', 'org_id');
+        return $this->belongsTo(Organization::class);
     }
 } 

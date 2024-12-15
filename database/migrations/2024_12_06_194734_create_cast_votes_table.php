@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('cast_votes', function (Blueprint $table) {
             $table->id('ballot_id');
             $table->boolean('isValid');
-            $table->string('status');
+            $table->string('status')->default('unpublished');
             $table->foreignId('user_id');
+            $table->foreignId('candidate_id');
             $table->foreignId('election_id');
             $table->timestamps();
         });
