@@ -16,6 +16,9 @@ class Candidate extends Model
     ];
 
     protected $fillable = [
+        'name',
+        'election_id',
+        'votes_count',
         'candidate_name',
         'status',
         'reason',
@@ -42,6 +45,11 @@ class Candidate extends Model
     {
         return $this->hasMany(Nomination::class, 'nominee_id')
             ->whereIn('nominee_id', $this->nominee_ids ?? []);
+    }
+
+    public function election()
+    {
+        return $this->belongsTo(Election::class);
     }
 }
     

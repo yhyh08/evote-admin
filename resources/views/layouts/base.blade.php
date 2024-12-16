@@ -29,6 +29,8 @@
     <link id="pagestyle" href="{{ asset('assets/css/soft-ui-dashboard.css') }}?v=1" rel="stylesheet" />
     @livewireStyles
 
+    <link href="https://cdn.jsdelivr.net/npm/apexcharts@3.35.0/dist/apexcharts.min.css" rel="stylesheet">
+
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
@@ -86,6 +88,8 @@
     <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="{{ asset('assets/js/soft-ui-dashboard.js') }}"></script>
     @livewireScripts
+
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.35.0/dist/apexcharts.min.js"></script>
 </body>
 
 </html>
