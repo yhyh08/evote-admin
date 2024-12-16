@@ -21,7 +21,6 @@
                                         {{ \Carbon\Carbon::parse($election->start_date)->format('d M Y') }} - 
                                         {{ \Carbon\Carbon::parse($election->end_date)->format('d M Y') }}
                                     </p>
-                                    <!-- Add more election details as needed -->
                                 </div>
                             </div>
                         </div>

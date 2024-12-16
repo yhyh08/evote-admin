@@ -16,11 +16,7 @@ class ResultShow extends Component
 
     public function render()
     {
-        return view('livewire.admin.result-show');
-    }
-
-    public function layout()
-    {
-        return 'layouts.app';
+        return view('livewire.admin.result-show')
+            ->layout('layouts.app');
     }
 } 

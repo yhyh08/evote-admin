@@ -1,13 +1,13 @@
 <div>
     <div class="container-fluid">
         <div class="page-header min-height-300 border-radius-xl mt-4"
-            style="background-image: url('../assets/img/use/p-back.jpg'); background-position-y: 50%;">
+            style="background-image: url('{{ asset('assets/img/use/p-back.jpg') }}'); background-position-y: 50%;">
         </div>
         <div class="card card-body blur shadow-blur mx-4 mt-n6">
             <div class="row gx-4">
                 <div class="col-auto">
                     <div class="avatar avatar-xl position-relative">
-                        <img src="../assets/img/bruce-mars.jpg" alt="..." class="w-100 border-radius-lg shadow-sm">
+                        <img src="{{ asset('assets/img/bruce-mars.jpg') }}" alt="..." class="w-100 border-radius-lg shadow-sm">
                         <a href="javascript:;"
                             class="btn btn-sm btn-icon-only bg-gradient-light position-absolute bottom-0 end-0 mb-n2 me-n2">
                             <i class="fa fa-pen top-0" data-bs-toggle="tooltip" data-bs-placement="top"

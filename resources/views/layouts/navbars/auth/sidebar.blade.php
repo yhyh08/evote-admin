@@ -4,7 +4,7 @@
         <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
             aria-hidden="true" id="iconSidenav"></i>
         <a class="align-items-center d-flex m-0 navbar-brand text-wrap logo-padding" href="{{ route('dashboard') }}">
-            <img src="../assets/img/use/evote-logo2.png" class="navbar-brand-img dashboard-logo" width="200">
+            <img src="{{ asset('assets/img/use/evote-logo2.png') }}" class="navbar-brand-img dashboard-logo" width="200">
         </a>
     </div>
     <hr class="horizontal dark mt-0">
