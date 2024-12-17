@@ -95,7 +95,6 @@
     @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
-        // Initialize charts when the document is ready
         document.addEventListener('DOMContentLoaded', function() {
             // Bar Chart
             var barOptions = {
