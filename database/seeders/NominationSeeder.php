@@ -87,7 +87,7 @@ class NominationSeeder extends Seeder
             ],
             [
                 'candidate_name' => 'Candidate 2',
-                'candidate_image' => 'candidate2.jpg',
+                'candidate_image' => '',
                 'candidate_phone' => '019-8765432',
                 'candidate_email' => 'candidate2@example.com',
                 'candidate_gender' => 'Female',
@@ -114,7 +114,7 @@ class NominationSeeder extends Seeder
             ],
             [
                 'candidate_name' => 'Candidate 3',
-                'candidate_image' => 'candidate3.jpg',
+                'candidate_image' => '',
                 'candidate_phone' => '019-8765432',
                 'candidate_email' => 'candidate3@example.com',
                 'candidate_gender' => 'Male',

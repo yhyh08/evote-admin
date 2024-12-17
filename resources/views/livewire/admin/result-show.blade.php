@@ -1,5 +1,5 @@
 <div>
-    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+    <main class="main-content position-relative h-100 border-radius-lg">
         <div class="container-fluid py-4">
             <div class="row">
                 <div class="col-12">
@@ -7,9 +7,6 @@
                         <div class="card-header pb-0 d-flex justify-content-between align-items-center">
                             <h4>Result</h4>
                             <div class="d-flex">
-                                <div class="search-bar me-3">
-                                    <input type="text" class="form-control" placeholder="Search">
-                                </div>
                                 <button class="btn btn-primary me-2">
                                     <i class="fas fa-download"></i> Download
                                 </button>
@@ -23,44 +20,46 @@
                             <h5 class="mb-4">Election {{ $election->id }}</h5>
                             
                             <h6 class="mb-3">Candidates</h6>
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Profile</th>
-                                            <th>Candidate</th>
-                                            <th>Ballot</th>
-                                            <th>Ballot Percentages (%)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($election->candidates as $candidate)
-                                        <tr>
-                                            <td>
-                                                <div class="avatar">
+                            <table class="table w-100">
+                                <thead>
+                                    <tr>
+                                        <th>Profile</th>
+                                        <th>Candidate</th>
+                                        <th>Ballot</th>
+                                        <th>Ballot Percentages (%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($election->candidates as $candidate)
+                                    <tr>
+                                        <td>
+                                            <div class="avatar">
+                                                @if($candidate->candidate_image)
+                                                    <img src="{{ asset('storage/' . $candidate->candidate_image) }}" alt="{{ $candidate->candidate_name }}" class="rounded-circle">
+                                                @else
                                                     <i class="fas fa-user"></i>
-                                                </div>
-                                            </td>
-                                            <td>{{ $candidate->name }}</td>
-                                            <td>{{ $candidate->votes_count }}</td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="progress flex-grow-1 me-2" style="height: 8px;">
-                                                        <div class="progress-bar bg-primary" role="progressbar" 
-                                                            style="width: {{ $candidate->percentage }}%" 
-                                                            aria-valuenow="{{ $candidate->percentage }}" 
-                                                            aria-valuemin="0" 
-                                                            aria-valuemax="100">
-                                                        </div>
+                                                @endif
+                                            </div>
+                                        </td>
+                                        <td>{{ $candidate->candidate_name }}</td>
+                                        <td>{{ $candidate->votes_count }}</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="progress flex-grow-1 me-2" style="height: 8px;">
+                                                    <div class="progress-bar bg-primary" role="progressbar" 
+                                                        style="width: {{ $candidate->percentage }}%" 
+                                                        aria-valuenow="{{ $candidate->percentage }}" 
+                                                        aria-valuemin="0" 
+                                                        aria-valuemax="100">
                                                     </div>
-                                                    <span>{{ number_format($candidate->percentage, 0) }}%</span>
                                                 </div>
-                                            </td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+                                                <span>{{ number_format($candidate->percentage, 0) }}%</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
 
                             <div class="mt-5">
                                 <h6 class="mb-3">Statistics</h6>

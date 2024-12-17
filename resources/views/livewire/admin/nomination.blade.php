@@ -176,61 +176,81 @@
                                             <div class="card-header d-flex justify-content-between align-items-center pb-0">
                                                 <h5>{{ $candidate->position ?? 'Candidate Details' }}</h5>
                                                 <span class="badge bg-{{ $candidate->status === 'Approved' ? 'success' : 'warning' }}">
-                                                {{ $candidate->status }}
-                                            </span>
+                                                    {{ $candidate->status }}
+                                                </span>
                                             </div>
                                             <div class="card-body py-0">
                                                 <div class="row">
-                                                    <div class="col-md-6">
-                                                        <div class="mb-2">
-                                                            <label class="text-xs text-secondary mb-0">Name</label>
-                                                            <p class="text-sm mb-2">{{ $candidate->candidate_name ?? 'N/A' }}</p>
-                                                        </div>
-                                                        <div class="mb-2">
-                                                            <label class="text-xs text-secondary mb-0">Email</label>
-                                                            <p class="text-sm mb-2">{{ $candidate->candidate_email ?? 'N/A' }}</p>
-                                                        </div>
-                                                        <div class="mb-2">
-                                                            <label class="text-xs text-secondary mb-0">Phone</label>
-                                                            <p class="text-sm mb-2">{{ $candidate->candidate_phone ?? 'N/A' }}</p>
-                                                        </div>
-                                                        <div class="mb-2">
-                                                            <label class="text-xs text-secondary mb-0">IC Number</label>
-                                                            <p class="text-sm mb-2">{{ $candidate->candidate_ic ?? 'N/A' }}</p>
-                                                        </div>
-                                                        <div class="mb-2">
-                                                            <label class="text-xs text-secondary mb-0">Date of Birth</label>
-                                                            <p class="text-sm mb-2">{{ $candidate->candidate_dob ?? 'N/A' }}</p>
-                                                        </div>
-                                                        <div class="mb-2">
-                                                            <label class="text-xs text-secondary mb-0">Position</label>
-                                                            <p class="text-sm mb-2">{{ $candidate->position ?? 'N/A' }}</p>
+                                                    <div class="col-md-3 text-center">
+                                                        <div class="mb-3">
+                                                            @if($candidate->candidate_image)
+                                                                <img src="{{ asset('storage/candidate/' . basename($candidate->candidate_image)) }}" 
+                                                                     alt="{{ $candidate->candidate_name }}" 
+                                                                     class="rounded-circle"
+                                                                     style="width: 100px; height: 100px; object-fit: cover;">
+                                                            @else
+                                                                <img src="{{ asset('storage/candidate/defaultProfile.jpg') }}"
+                                                                     alt="Default Profile"
+                                                                     class="rounded-circle"
+                                                                     style="width: 100px; height: 100px; object-fit: cover;">
+                                                            @endif
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-6">
-                                                        <div class="mb-2">
-                                                            <label class="text-xs text-secondary mb-0">Gender</label>
-                                                            <p class="text-sm mb-2">{{ $candidate->candidate_gender ?? 'N/A' }}</p>
-                                                        </div>
-                                                        <div class="mb-2">
-                                                            <label class="text-xs text-secondary mb-0">Nationality</label>
-                                                            <p class="text-sm mb-2">{{ $candidate->nationality ?? 'N/A' }}</p>
-                                                        </div>
-                                                        <div class="mb-2">
-                                                            <label class="text-xs text-secondary mb-0">Religion</label>
-                                                            <p class="text-sm mb-2">{{ $candidate->religion ?? 'N/A' }}</p>
-                                                        </div>
-                                                        <div class="mb-2">
-                                                            <label class="text-xs text-secondary mb-0">Department</label>
-                                                            <p class="text-sm mb-2">{{ $candidate->job ?? 'N/A' }}</p>
-                                                        </div>
-                                                        <div class="mb-2">
-                                                            <label class="text-xs text-secondary mb-0">Income</label>
-                                                            <p class="text-sm mb-2">RM {{ number_format($candidate->income ?? 0, 2) }}</p>
-                                                        </div>
-                                                        <div class="mb-2">
-                                                            <label class="text-xs text-secondary mb-0">Marriage Status</label>
-                                                            <p class="text-sm mb-2">{{ $candidate->marriage_status ?? 'N/A' }}</p>
+                                                    
+                                                    <div class="col-md-9">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="mb-2">
+                                                                    <label class="text-xs text-secondary mb-0">Name</label>
+                                                                    <p class="text-sm mb-2">{{ $candidate->candidate_name ?? 'N/A' }}</p>
+                                                                </div>
+                                                                <div class="mb-2">
+                                                                    <label class="text-xs text-secondary mb-0">Email</label>
+                                                                    <p class="text-sm mb-2">{{ $candidate->candidate_email ?? 'N/A' }}</p>
+                                                                </div>
+                                                                <div class="mb-2">
+                                                                    <label class="text-xs text-secondary mb-0">Phone</label>
+                                                                    <p class="text-sm mb-2">{{ $candidate->candidate_phone ?? 'N/A' }}</p>
+                                                                </div>
+                                                                <div class="mb-2">
+                                                                    <label class="text-xs text-secondary mb-0">IC Number</label>
+                                                                    <p class="text-sm mb-2">{{ $candidate->candidate_ic ?? 'N/A' }}</p>
+                                                                </div>
+                                                                <div class="mb-2">
+                                                                    <label class="text-xs text-secondary mb-0">Date of Birth</label>
+                                                                    <p class="text-sm mb-2">{{ $candidate->candidate_dob ?? 'N/A' }}</p>
+                                                                </div>
+                                                                <div class="mb-2">
+                                                                    <label class="text-xs text-secondary mb-0">Position</label>
+                                                                    <p class="text-sm mb-2">{{ $candidate->position ?? 'N/A' }}</p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="mb-2">
+                                                                    <label class="text-xs text-secondary mb-0">Gender</label>
+                                                                    <p class="text-sm mb-2">{{ $candidate->candidate_gender ?? 'N/A' }}</p>
+                                                                </div>
+                                                                <div class="mb-2">
+                                                                    <label class="text-xs text-secondary mb-0">Nationality</label>
+                                                                    <p class="text-sm mb-2">{{ $candidate->nationality ?? 'N/A' }}</p>
+                                                                </div>
+                                                                <div class="mb-2">
+                                                                    <label class="text-xs text-secondary mb-0">Religion</label>
+                                                                    <p class="text-sm mb-2">{{ $candidate->religion ?? 'N/A' }}</p>
+                                                                </div>
+                                                                <div class="mb-2">
+                                                                    <label class="text-xs text-secondary mb-0">Department</label>
+                                                                    <p class="text-sm mb-2">{{ $candidate->job ?? 'N/A' }}</p>
+                                                                </div>
+                                                                <div class="mb-2">
+                                                                    <label class="text-xs text-secondary mb-0">Income</label>
+                                                                    <p class="text-sm mb-2">RM {{ number_format($candidate->income ?? 0, 2) }}</p>
+                                                                </div>
+                                                                <div class="mb-2">
+                                                                    <label class="text-xs text-secondary mb-0">Marriage Status</label>
+                                                                    <p class="text-sm mb-2">{{ $candidate->marriage_status ?? 'N/A' }}</p>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
