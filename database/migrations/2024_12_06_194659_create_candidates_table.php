@@ -34,7 +34,7 @@ return new class extends Migration
             $table->date('receive_date');
             $table->date('approve_date');
             $table->string('sign');
-            $table->foreignId('election_id')->default(1);
+            $table->foreignId('election_id');
             $table->integer('votes_count')->default(0);
             $table->json('nominee_id');
             $table->json('cand_doc_id');

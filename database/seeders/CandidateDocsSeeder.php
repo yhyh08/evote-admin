@@ -59,6 +59,22 @@ class CandidateDocsSeeder extends Seeder
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
+            [
+                'cand_doc_id' => 7,
+                'candidate_id' => 4,
+                'document' => 'school.pdf',
+                'description' => 'School Documents',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'cand_doc_id' => 8,
+                'candidate_id' => 4,
+                'document' => 'FYP.pdf',
+                'description' => 'Final Year Project Documents',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
         ]);
     }
 } 
