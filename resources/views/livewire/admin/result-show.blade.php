@@ -13,6 +13,9 @@
                                 </p>
                             </div>
                             <div class="d-flex">
+                                <a href="javascript:history.back()" class="btn btn-secondary btn-back" type="button">
+                                    <i class="fa-solid fa-chevron-left me-2"></i>Back
+                                </a>
                                 <button class="btn btn-primary me-2">
                                     <i class="fas fa-download"></i> Download
                                 </button>
@@ -24,55 +27,58 @@
                         
                         <div class="card-body">
                             <h6 class="mb-3">Candidates Results</h6>
-                            <table class="table w-100">
-                                <thead>
-                                    <tr>
-                                        <th>Profile</th>
-                                        <th>Candidate</th>
-                                        <th>Ballot</th>
-                                        <th>Ballot Percentages (%)</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($election->candidates as $candidate)
-                                    <tr>
-                                        <td>
-                                            <div class="avatar">
-                                                @if($candidate->candidate_image)
-                                                    <img src="{{ asset('storage/candidate/' . basename($candidate->candidate_image)) }}" 
-                                                         alt="{{ $candidate->candidate_name }}" 
-                                                         class="rounded-circle"
-                                                         style="width: 50px; height: 50px; object-fit: cover;">
-                                                @else
-                                                    <img src="{{ asset('storage/candidate/defaultProfile.jpg') }}"
-                                                         alt="Default Profile"
-                                                         class="rounded-circle"
-                                                         style="width: 50px; height: 50px; object-fit: cover;">
-                                                @endif
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <p class="text-sm mb-0">{{ $candidate->candidate_name }}</p>
-                                            <p class="text-xs text-muted mb-0">{{ $candidate->position }}</p>
-                                        </td>
-                                        <td>{{ $candidate->votes_count }}</td>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="progress flex-grow-1 me-2" style="height: 8px;">
-                                                    <div class="progress-bar bg-primary" role="progressbar" 
-                                                        style="width: {{ $candidate->percentage }}%" 
-                                                        aria-valuenow="{{ $candidate->percentage }}" 
-                                                        aria-valuemin="0" 
-                                                        aria-valuemax="100">
-                                                    </div>
+                            @foreach($election->grouped_candidates as $position => $candidates)
+                                <h5 class="text-primary mt-4 mb-3">{{ $position }}</h5>
+                                <table class="table w-100">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-left p-2">Profile</th>
+                                            <th class="text-left p-2">Candidate</th>
+                                            <th class="text-left p-2">Ballot</th>
+                                            <th class="text-left p-2">Ballot Percentages (%)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($candidates as $candidate)
+                                        <tr>
+                                            <td class="text-left p-2">
+                                                <div class="avatar">
+                                                    @if($candidate->candidate_image)
+                                                        <img src="{{ asset('storage/candidate/' . basename($candidate->candidate_image)) }}" 
+                                                             alt="{{ $candidate->candidate_name }}" 
+                                                             class="rounded-circle"
+                                                             style="width: 50px; height: 50px; object-fit: cover;">
+                                                    @else
+                                                        <img src="{{ asset('storage/candidate/defaultProfile.jpg') }}"
+                                                             alt="Default Profile"
+                                                             class="rounded-circle"
+                                                             style="width: 50px; height: 50px; object-fit: cover;">
+                                                    @endif
                                                 </div>
-                                                <span>{{ number_format($candidate->percentage, 0) }}%</span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                            </td>
+                                            <td class="text-left p-2">
+                                                <p class="text-sm mb-0">{{ $candidate->candidate_name }}</p>
+                                                <p class="text-xs text-muted mb-0">{{ $candidate->position }}</p>
+                                            </td>
+                                            <td class="text-left p-2">{{ $candidate->votes_count }}</td>
+                                            <td class="text-left p-2">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="progress flex-grow-1 me-2" style="height: 7px;">
+                                                        <div class="progress-bar bg-primary" role="progressbar" 
+                                                            style="width: {{ $candidate->percentage }}%" 
+                                                            aria-valuenow="{{ $candidate->percentage }}" 
+                                                            aria-valuemin="0" 
+                                                            aria-valuemax="100">
+                                                        </div>
+                                                    </div>
+                                                    <span>{{ number_format($candidate->percentage, 1) }}%</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            @endforeach
 
                             <div class="mt-5">
                                 <h6 class="mb-3">Statistics</h6>
@@ -127,4 +133,5 @@
         });
     </script>
     @endpush
+
 </div>

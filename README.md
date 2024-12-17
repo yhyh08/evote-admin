@@ -19,3 +19,9 @@
 
 ### Sample Excel upload
 - in root file name as Terms sample.xlsx
+
+### Run the command below to use the print pdf function
+- composer require barryvdh/laravel-dompdf
+
+### Run the command below to use the storage link function
+- php artisan storage:link  
