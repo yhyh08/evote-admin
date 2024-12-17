@@ -12,13 +12,12 @@ class ResultShowController extends Component
     public function mount($election)
     {
         $this->election = Election::findOrFail($election);
+        
+        $this->election->load('candidates');
     }
 
     public function render()
     {
-        $this->election->load('candidates');
-        
-        // Calculate percentages for each candidate
         $totalVotes = $this->election->candidates->sum('votes_count');
         $this->election->candidates->each(function($candidate) use ($totalVotes) {
             $candidate->percentage = $totalVotes > 0 ? 
