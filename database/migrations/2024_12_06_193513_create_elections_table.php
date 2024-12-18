@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('election_id');
             $table->string('election_topic');
             $table->string('type');
-            $table->string('position');
+            $table->json('position');
             $table->text('description');
             $table->date('start_date');
             $table->date('end_date');

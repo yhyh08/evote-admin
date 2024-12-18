@@ -23,7 +23,8 @@ class Election extends Model
         'start_date' => 'datetime',
         'end_date' => 'datetime',
         'nominate_period_start' => 'datetime',
-        'nominate_period_end' => 'datetime'
+        'nominate_period_end' => 'datetime',
+        'position' => 'array',
     ];
 
     protected $primaryKey = 'election_id';

@@ -66,7 +66,9 @@
                                                     </p>
                                                 </td>
                                                 <td class="ps-3">
-                                                    <p class="text-xs font-weight-bold mb-0">{{ $election->position }}</p>
+                                                    <p class="text-xs font-weight-bold mb-0">
+                                                        {{ is_array($election->position) ? implode(', ', $election->position) : $election->position }}
+                                                    </p>
                                                 </td>
                                                 <td class="ps-3">
                                                     <p class="text-xs font-weight-bold mb-0">{{ date('Y-m-d', strtotime($election->start_date)) }}</p>
@@ -138,7 +140,44 @@
                     </div>
                     <div class="mb-3">
                         <label>Position</label>
-                        <input type="text" wire:model="position" class="form-control" @if($isView) readonly @endif>
+                        <div class="dropdown">
+                            <button class="form-control text-start dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ count($position) }} Selected
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <div class="dropdown-item">
+                                    <label class="position-label">
+                                        <input type="checkbox" wire:model="position" value="President" {{ in_array('President', $position) ? 'checked' : '' }}>
+                                        President
+                                    </label>
+                                </div>
+                                <div class="dropdown-item">
+                                    <label class="position-label">
+                                        <input type="checkbox" wire:model="position" value="Vice President" {{ in_array('Vice President', $position) ? 'checked' : '' }}>
+                                        Vice President
+                                    </label>
+                                </div>
+                                <div class="dropdown-item">
+                                    <label class="position-label">
+                                        <input type="checkbox" wire:model="position" value="Member" {{ in_array('Member', $position) ? 'checked' : '' }}>
+                                        Member
+                                    </label>
+                                </div>
+                                <div class="dropdown-item">
+                                    <label class="position-label">
+                                        <input type="checkbox" wire:model="position" value="Secretary" {{ in_array('Secretary', $position) ? 'checked' : '' }}>
+                                        Secretary
+                                    </label>
+                                </div>
+                                <div class="dropdown-item">
+                                    <label class="position-label">
+                                        <input type="checkbox" wire:model="position" value="Treasurer" {{ in_array('Treasurer', $position) ? 'checked' : '' }}>
+                                        Treasurer
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
                         @error('position') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                     <div class="mb-3">
@@ -243,4 +282,18 @@
     @if($confirmingDeletion)
         <div class="modal-backdrop fade show"></div>
     @endif
-</div> 
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkboxes = document.querySelectorAll('.dropdown-item input[type="checkbox"]');
+        const button = document.getElementById('dropdownMenuButton');
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function () {
+                const selectedCount = Array.from(checkboxes).filter(i => i.checked).length;
+                button.innerText = `${selectedCount} Selected`;
+            });
+        });
+    });
+</script> 

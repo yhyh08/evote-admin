@@ -14,7 +14,7 @@ class ElectionSeeder extends Seeder
             [
                 'election_topic' => 'Student Council Election 2024',
                 'type' => 0,
-                'position' => 'President',
+                'position' => json_encode(['President', 'Vice President']),
                 'description' => 'Annual for selecting student council representatives',
                 'start_date' => Carbon::now()->addDays(16),
                 'end_date' => Carbon::now()->addDays(29),
@@ -29,7 +29,7 @@ class ElectionSeeder extends Seeder
             [
                 'election_topic' => 'Faculty Board Election 2024',
                 'type' => 1,
-                'position' => 'Member',
+                'position' => json_encode(['Secretary', 'Treasurer']),
                 'description' => 'Election for faculty board members',
                 'start_date' => Carbon::now()->addDays(60),
                 'end_date' => Carbon::now()->addDays(65),

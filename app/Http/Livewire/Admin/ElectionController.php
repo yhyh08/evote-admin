@@ -8,17 +8,18 @@ use App\Models\Organization;
 
 class ElectionController extends Component
 {
-    public $election_topic, $description, $start_date, $end_date, $status,$type, $position, $nominate_period_start, $nominate_period_end;
+    public $election_topic, $description, $start_date, $end_date, $status,$type, $nominate_period_start, $nominate_period_end;
     public $election_id;
     public $isOpen = false;
     public $isView = false;
     public $confirmingDeletion = false;
     public $org_id;
+    public $position = [];
 
     protected $rules = [
         'election_topic' => 'required|min:3',
         'type' => 'required',
-        'position' => 'required',
+        'position' => 'required|array',
         'description' => 'required|min:10',
         'nominate_period_start' => 'required|date',
         'nominate_period_end' => 'required|date|after_or_equal:nominate_period_start',
@@ -44,6 +45,11 @@ class ElectionController extends Component
         'status.required' => 'The status is required.'
     ];
 
+    public function mount()
+    {
+        $this->position = [];
+    }
+
     public function render()
     {
         $elections = Election::with('organization')->get();
@@ -64,7 +70,7 @@ class ElectionController extends Component
         $this->validate([
             'election_topic' => 'required|min:3',
             'type' => 'required',
-            'position' => 'required',
+            'position' => 'required|array',
             'description' => 'required|min:10',
             'nominate_period_start' => 'required|date',
             'nominate_period_end' => 'required|date|after_or_equal:nominate_period_start',
@@ -77,7 +83,7 @@ class ElectionController extends Component
         Election::create([
             'election_topic' => $this->election_topic,
             'type' => $this->type,
-            'position' => $this->position,
+            'position' => json_encode($this->position),
             'description' => $this->description,
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
@@ -102,7 +108,9 @@ class ElectionController extends Component
         $this->election_id = $election->election_id;
         $this->election_topic = $election->election_topic;
         $this->type = $election->type;
-        $this->position = $election->position;
+        
+        $this->position = $election->position ?? [];
+        
         $this->description = $election->description;
         $this->nominate_period_start = date('Y-m-d', strtotime($election->nominate_period_start));
         $this->nominate_period_end = date('Y-m-d', strtotime($election->nominate_period_end));
@@ -121,7 +129,7 @@ class ElectionController extends Component
         $this->validate([
             'election_topic' => 'required|min:3',
             'type' => 'required',
-            'position' => 'required',
+            'position' => 'required|array',
             'description' => 'required|min:10',
             'nominate_period_start' => 'required|date',
             'nominate_period_end' => 'required|date|after_or_equal:nominate_period_start',
@@ -134,7 +142,7 @@ class ElectionController extends Component
         Election::where('election_id', $this->election_id)->update([
             'election_topic' => $this->election_topic,
             'type' => $this->type,
-            'position' => $this->position,
+            'position' => json_encode($this->position),
             'description' => $this->description,
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
@@ -161,13 +169,15 @@ class ElectionController extends Component
         $this->election_id = $election->election_id;
         $this->election_topic = $election->election_topic;
         $this->type = $election->type;
-        $this->position = $election->position;
+        
+        // Decode the position from JSON
+        $this->position = json_decode($election->position, true) ?? []; // Ensure it's an array
+        
         $this->description = $election->description;
         $this->nominate_period_start = date('Y-m-d', strtotime($election->nominate_period_start));
         $this->nominate_period_end = date('Y-m-d', strtotime($election->nominate_period_end));
         $this->start_date = date('Y-m-d', strtotime($election->start_date));
         $this->end_date = date('Y-m-d', strtotime($election->end_date));
-        $this->result_release_date = date('Y-m-d', strtotime($election->result_release_date));
         $this->status = $election->status;
         $this->org_id = $election->org_id;
 
@@ -191,7 +201,7 @@ class ElectionController extends Component
     {
         $this->election_topic = '';
         $this->type = '';
-        $this->position = '';
+        $this->position = [];
         $this->description = '';
         $this->start_date = '';
         $this->end_date = '';
