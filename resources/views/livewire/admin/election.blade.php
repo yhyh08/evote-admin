@@ -22,15 +22,15 @@
                                 <table class="table align-items-center mb-0">
                                     <thead>
                                         <tr>
-                                            <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">No</th>
-                                            <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">Topic</th>
-                                            <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">Organization</th>
-                                            <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">Type</th>
-                                            <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">Position</th>
-                                            <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">Start Date</th>
-                                            <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">End Date</th>
-                                            <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">Status</th>
-                                            <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">Action</th>
+                                            <th class="text-left text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">No</th>
+                                            <th class="text-left text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">Topic</th>
+                                            <th class="text-left text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">Organization</th>
+                                            <th class="text-left text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">Type</th>
+                                            <th class="text-left text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">Position</th>
+                                            <th class="text-left text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">Start Date</th>
+                                            <th class="text-left text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">End Date</th>
+                                            <th class="text-left text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">Status</th>
+                                            <th class="text-left text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>

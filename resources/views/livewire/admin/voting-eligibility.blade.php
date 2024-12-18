@@ -71,11 +71,11 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>No</th>
-                                        <th>Organization</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Phone</th>
+                                        <th class="text-left text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">No</th>
+                                        <th class="text-left text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">Organization</th>
+                                        <th class="text-left text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">Name</th>
+                                        <th class="text-left text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">Email</th>
+                                        <th class="text-left text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">Phone</th>
                                     </tr>
                                 </thead>
                                 <tbody>

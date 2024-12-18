@@ -16,22 +16,22 @@
                                 <table class="table align-items-center mb-0">
                                     <thead>
                                         <tr>
-                                            <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">
+                                            <th class="text-left text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">
                                                 No
                                             </th>
-                                            <th class="text-left text-secondary text-xxs font-weight-bolder opacity-7 ps-3">
+                                            <th class="text-left text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">
                                                 Election
                                             </th>
-                                            <th class="text-left text-secondary text-xxs font-weight-bolder opacity-7 ps-3">
+                                            <th class="text-left text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">
                                                 Election Detail
                                             </th>
-                                            <th class="text-left text-secondary text-xxs font-weight-bolder opacity-7 ps-3">
+                                            <th class="text-left text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">
                                                 Period
                                             </th>
-                                            <th class="text-left text-secondary text-xxs font-weight-bolder opacity-7 ps-3">
+                                            <th class="text-left text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">
                                                 Status
                                             </th>
-                                            <th class="text-left text-secondary text-xxs font-weight-bolder opacity-7 ps-3">
+                                            <th class="text-left text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">
                                                 Action
                                             </th>
                                         </tr>
