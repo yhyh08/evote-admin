@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Admin;
 
 use App\Models\Election;
 use Livewire\Component;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ResultShowController extends Component
 {
@@ -15,18 +16,23 @@ class ResultShowController extends Component
             $query->orderBy('votes_count', 'desc');
         }])->findOrFail($election);
 
-        // Debug: Log the candidates data
         \Log::info('Candidates Data:', $this->election->candidates->toArray());
 
-        // Calculate percentages
         $totalVotes = $this->election->candidates->sum('votes_count');
         $this->election->candidates->each(function($candidate) use ($totalVotes) {
             $candidate->percentage = $totalVotes > 0 ? 
                 ($candidate->votes_count / $totalVotes) * 100 : 0;
         });
 
-        // Group candidates by position
         $this->election->grouped_candidates = $this->election->candidates->groupBy('position');
+    }
+
+    public function downloadPdf($electionId)
+    {
+        $election = Election::with('grouped_candidates')->findOrFail($electionId);
+
+        $pdf = Pdf::loadView('livewire.admin.result-pdf', compact('election'));
+        return $pdf->download('election_results.pdf');
     }
 
     public function render()

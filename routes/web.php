@@ -72,3 +72,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/laravel-user-profile', UserProfile::class)->name('user-profile');
     Route::get('/laravel-user-management', UserManagement::class)->name('user-management');
 });
+
+Route::get('/result/{electionId}/pdf', [ResultShowController::class, 'downloadPdf'])->name('result.pdf');
