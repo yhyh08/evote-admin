@@ -73,14 +73,14 @@
                                                     <a href="{{ route('result.show', $election->election_id) }}" class="me-3" data-bs-toggle="tooltip" data-bs-original-title="View Results">
                                                         <i class="fa-solid fa-file-lines text-secondary"></i>
                                                     </a>
-                                                    <a href="#" class="me-3" data-bs-toggle="tooltip" data-bs-original-title="Public Results">
-                                                        <i class="fa-solid fa-earth-americas text-secondary"></i>
+                                                    <a href="#" class="text-success me-3" data-bs-toggle="modal" data-bs-target="#publishModal" data-election-id="{{ $election->election_id }}">
+                                                        <i class="fas fa-globe text-secondary"></i>
                                                     </a>
                                                 </td>
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="5" class="text-center">
+                                                <td colspan="6" class="text-center">
                                                     <p class="text-xs font-weight-bold mb-0">No elections found</p>
                                                 </td>
                                             </tr>
@@ -94,4 +94,49 @@
             </div>
         </div>
     </main>
-</div> 
+
+    <!-- Modal for Publish Confirmation -->
+    <div class="modal fade" id="publishModal" tabindex="-1" aria-labelledby="publishModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="publishModalLabel">Confirm Publish</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to publish the results? This action cannot be undone.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirmPublish">Publish</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let selectedElectionId;
+
+    document.querySelectorAll('[data-bs-target="#publishModal"]').forEach(button => {
+        button.addEventListener('click', function() {
+            selectedElectionId = this.getAttribute('data-election-id');
+        });
+    });
+
+    document.getElementById('confirmPublish').addEventListener('click', function() {
+        // Logic to check if the election period has ended
+        const endDate = new Date("{{ \Carbon\Carbon::parse($election->end_date)->toDateString() }}");
+        const today = new Date();
+        
+        if (endDate < today) {
+            // Logic to publish the results
+            // You may want to call a Livewire method or make an AJAX request here
+            alert(`Results for election ID ${selectedElectionId} published successfully!`);
+            // Close the modal
+            $('#publishModal').modal('hide');
+        } else {
+            alert('You cannot publish results until the election period has ended.');
+        }
+    });
+</script> 

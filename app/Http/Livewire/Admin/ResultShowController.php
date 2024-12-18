@@ -12,34 +12,25 @@ class ResultShowController extends Component
     public function mount($election)
     {
         $this->election = Election::with(['candidates' => function($query) {
-            $query->orderBy('position');
+            $query->orderBy('votes_count', 'desc');
         }])->findOrFail($election);
 
-        $groupedCandidates = $this->election->candidates->groupBy('position')->map(function($candidates) {
-            $totalVotesForPosition = $candidates->sum('votes_count');
-            return $candidates->map(function($candidate) use ($totalVotesForPosition) {
-                $candidate->percentage = $totalVotesForPosition > 0 
-                    ? ($candidate->votes_count / $totalVotesForPosition) * 100 
-                    : 0;
-                return $candidate;
-            });
-        });
+        // Debug: Log the candidates data
+        \Log::info('Candidates Data:', $this->election->candidates->toArray());
 
-        $this->election->grouped_candidates = $groupedCandidates;
-
-        // Debugging line
-        // dd($this->election->grouped_candidates);
-    }
-
-    public function render()
-    {
+        // Calculate percentages
         $totalVotes = $this->election->candidates->sum('votes_count');
         $this->election->candidates->each(function($candidate) use ($totalVotes) {
             $candidate->percentage = $totalVotes > 0 ? 
                 ($candidate->votes_count / $totalVotes) * 100 : 0;
-        }); 
+        });
 
-        return view('livewire.admin.result-show')
-            ->layout('layouts.app');
+        // Group candidates by position
+        $this->election->grouped_candidates = $this->election->candidates->groupBy('position');
+    }
+
+    public function render()
+    {
+        return view('livewire.admin.result-show');
     }
 } 

@@ -15,7 +15,7 @@ class ElectionSeeder extends Seeder
                 'election_topic' => 'Student Council Election 2024',
                 'type' => 0,
                 'position' => 'President',
-                'description' => 'Annual election for selecting student council representatives',
+                'description' => 'Annual for selecting student council representatives',
                 'start_date' => Carbon::now()->addDays(16),
                 'end_date' => Carbon::now()->addDays(29),
                 'nominate_period_start' => Carbon::now(),

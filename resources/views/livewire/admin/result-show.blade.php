@@ -19,7 +19,7 @@
                                 <button class="btn btn-primary me-2">
                                     <i class="fas fa-download"></i> Download
                                 </button>
-                                <button class="btn btn-success">
+                                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#publishModal">
                                     <i class="fas fa-globe"></i> Publish
                                 </button>
                             </div>
@@ -27,21 +27,21 @@
                         
                         <div class="card-body">
                             <h6 class="mb-3">Candidates Results</h6>
-                            @foreach($election->grouped_candidates as $position => $candidates)
+                            @forelse($election->grouped_candidates as $position => $candidates)
                                 <h5 class="text-primary mt-4 mb-3">{{ $position }}</h5>
                                 <table class="table w-100">
                                     <thead>
                                         <tr>
-                                            <th class="text-left p-2">Profile</th>
-                                            <th class="text-left p-2">Candidate</th>
-                                            <th class="text-left p-2">Ballot</th>
-                                            <th class="text-left p-2">Ballot Percentages (%)</th>
+                                            <th>Profile</th>
+                                            <th>Candidate</th>
+                                            <th>Ballot</th>
+                                            <th>Ballot Percentages (%)</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach($candidates as $candidate)
                                         <tr>
-                                            <td class="text-left p-2">
+                                            <td>
                                                 <div class="avatar">
                                                     @if($candidate->candidate_image)
                                                         <img src="{{ asset('storage/candidate/' . basename($candidate->candidate_image)) }}" 
@@ -56,14 +56,14 @@
                                                     @endif
                                                 </div>
                                             </td>
-                                            <td class="text-left p-2">
+                                            <td>
                                                 <p class="text-sm mb-0">{{ $candidate->candidate_name }}</p>
                                                 <p class="text-xs text-muted mb-0">{{ $candidate->position }}</p>
                                             </td>
-                                            <td class="text-left p-2">{{ $candidate->votes_count }}</td>
-                                            <td class="text-left p-2">
+                                            <td>{{ $candidate->votes_count }}</td>
+                                            <td>
                                                 <div class="d-flex align-items-center">
-                                                    <div class="progress flex-grow-1 me-2" style="height: 7px;">
+                                                    <div class="progress flex-grow-1 me-2" style="height: 8px;">
                                                         <div class="progress-bar bg-primary" role="progressbar" 
                                                             style="width: {{ $candidate->percentage }}%" 
                                                             aria-valuenow="{{ $candidate->percentage }}" 
@@ -78,17 +78,25 @@
                                         @endforeach
                                     </tbody>
                                 </table>
-                            @endforeach
+                            @empty
+                                <div class="alert alert-info">
+                                    No candidates found for this election.
+                                </div>
+                            @endforelse
 
                             <div class="mt-5">
                                 <h6 class="mb-3">Statistics</h6>
+                                <canvas id="candidatesChart"></canvas>
+                            </div>
+                            <div class="mt-5">
+                                <h6 class="mb-3">Candidates by Position</h6>
                                 <div class="row">
-                                    <div class="col-md-8">
-                                        <div id="barChart" style="height: 300px;"></div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div id="pieChart" style="height: 300px;"></div>
-                                    </div>
+                                    @foreach($election->grouped_candidates as $position => $candidates)
+                                        <div class="col-md-4 mb-4">
+                                            <h5 class="text-primary mt-4 mb-3">{{ $position }}</h5>
+                                            <canvas id="pieChart-{{ $position }}" width="400" height="200"></canvas>
+                                        </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
@@ -98,40 +106,109 @@
         </div>
     </main>
 
-    @push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Bar Chart
-            var barOptions = {
-                series: [{
-                    name: 'Votes',
-                    data: [{{ implode(',', $election->candidates->pluck('votes_count')->toArray()) }}]
-                }],
-                chart: {
-                    type: 'bar',
-                    height: 300
-                },
-                xaxis: {
-                    categories: {!! json_encode($election->candidates->pluck('name')->toArray()) !!}
-                }
-            };
-            var barChart = new ApexCharts(document.querySelector("#barChart"), barOptions);
-            barChart.render();
-
-            // Pie Chart
-            var pieOptions = {
-                series: [{{ implode(',', $election->candidates->pluck('votes_count')->toArray()) }}],
-                chart: {
-                    type: 'donut',
-                    height: 300
-                },
-                labels: {!! json_encode($election->candidates->pluck('name')->toArray()) !!}
-            };
-            var pieChart = new ApexCharts(document.querySelector("#pieChart"), pieOptions);
-            pieChart.render();
-        });
-    </script>
-    @endpush
-
+    <!-- Modal for Publish Confirmation -->
+    <div class="modal fade" id="publishModal" tabindex="-1" aria-labelledby="publishModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="publishModalLabel">Confirm Publish</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to publish the results? This action cannot be undone.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirmPublish">Publish</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const ctx = document.getElementById('candidatesChart').getContext('2d');
+        const candidatesData = @json($election->grouped_candidates);
+        
+        const labels = Object.keys(candidatesData).flatMap(position => 
+            candidatesData[position].map(candidate => candidate.candidate_name)
+        );
+
+        const data = Object.keys(candidatesData).flatMap(position => 
+            candidatesData[position].map(candidate => candidate.votes_count)
+        );
+
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Votes Count',
+                    data: data,
+                    backgroundColor: 'rgb(175, 81, 225)',
+                    borderColor: 'rgb(175, 81, 225)',
+                    borderWidth: 1,
+                    barThickness: 200,
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Create pie charts for each position
+        Object.keys(candidatesData).forEach(position => {
+            const pieCtx = document.getElementById(`pieChart-${position}`).getContext('2d');
+            const pieLabels = candidatesData[position].map(candidate => candidate.candidate_name);
+            const pieData = candidatesData[position].map(candidate => candidate.votes_count);
+
+            new Chart(pieCtx, {
+                type: 'pie',
+                data: {
+                    labels: pieLabels,
+                    datasets: [{
+                        label: 'Votes Count',
+                        data: pieData,
+                        backgroundColor: pieLabels.map(() => 
+                            `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.6)`
+                        ),
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: `Votes Distribution for ${position}`
+                        }
+                    }
+                }
+            });
+        });
+    });
+
+    document.getElementById('confirmPublish').addEventListener('click', function() {
+        // Check if the election period has ended
+        const endDate = new Date("{{ \Carbon\Carbon::parse($election->end_date)->toDateString() }}");
+        const today = new Date();
+        
+        if (endDate < today) {
+            // Logic to publish the results
+            alert('Results published successfully!');
+            // Close the modal
+            $('#publishModal').modal('hide');
+        } else {
+            alert('You cannot publish results until the election period has ended.');
+        }
+    });
+</script>
