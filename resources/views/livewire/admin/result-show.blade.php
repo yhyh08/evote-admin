@@ -16,9 +16,11 @@
                                 <a href="javascript:history.back()" class="btn btn-secondary btn-back" type="button">
                                     <i class="fa-solid fa-chevron-left me-2"></i>Back
                                 </a>
-                                <a href="{{ route('result.pdf', ['electionId' => $election->election_id]) }}" class="btn btn-primary me-2">
-                                    <i class="fas fa-download"></i> Download PDF
+                                
+                                <a href="{{ route('result.show', ['election' => $election->id]) }}" class="btn btn-primary">
+                                    View Results
                                 </a>
+
                                 <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#publishModal">
                                     <i class="fas fa-globe"></i> Publish
                                 </button>

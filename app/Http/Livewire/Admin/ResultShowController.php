@@ -29,10 +29,25 @@ class ResultShowController extends Component
 
     public function downloadPdf($electionId)
     {
-        $election = Election::with('grouped_candidates')->findOrFail($electionId);
+        $election = Election::with(['candidates' => function($query) {
+            $query->orderBy('votes_count', 'desc');
+        }])->findOrFail($electionId);
+
+        $election->grouped_candidates = $election->candidates->groupBy('position');
 
         $pdf = Pdf::loadView('livewire.admin.result-pdf', compact('election'));
         return $pdf->download('election_results.pdf');
+    }
+
+    public function show($election)
+    {
+        $election = Election::with(['candidates' => function($query) {
+            $query->orderBy('votes_count', 'desc');
+        }])->findOrFail($election);
+
+        \Log::info('Election Data:', $election->toArray());
+
+        return view('livewire.admin.result-show', compact('election'));
     }
 
     public function render()

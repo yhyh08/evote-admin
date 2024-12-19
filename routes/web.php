@@ -28,6 +28,8 @@ use App\Http\Livewire\LaravelExamples\UserManagement;
 
 use Illuminate\Http\Request;
 
+use App\Http\Livewire\Admin\ResultShowController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -58,7 +60,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/voting-eligibility', VotingEligibilityController::class)->name('voting-eligibility');
 
     Route::get('/result', App\Http\Livewire\Admin\ResultController::class)->name('result');
-    Route::get('/result/{election}/show', App\Http\Livewire\Admin\ResultShowController::class)->name('result.show');
+    Route::get('/result/{election}/show', [ResultShowController::class, 'show'])->name('result.show');
 
     Route::get('/report', ReportController::class)->name('report');
     Route::get('/settings', SettingsController::class)->name('settings');
@@ -73,4 +75,4 @@ Route::middleware('auth')->group(function () {
     Route::get('/laravel-user-management', UserManagement::class)->name('user-management');
 });
 
-Route::get('/result/{electionId}/pdf', [ResultShowController::class, 'downloadPdf'])->name('result.pdf');
+Route::get('/result/{election}/pdf', [ResultShowController::class, 'downloadPdf'])->name('result.pdf');
