@@ -36,9 +36,4 @@ class ResultController extends Component
             'election' => $election
         ]);
     }
-
-    public function layout()
-    {
-        return 'layouts.app';
-    }
 }

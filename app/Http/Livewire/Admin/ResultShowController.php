@@ -54,4 +54,9 @@ class ResultShowController extends Component
     {
         return view('livewire.admin.result-show');
     }
+
+    public function layout()
+    {
+        return 'layouts.app';
+    }
 } 

@@ -17,13 +17,13 @@
                                     <i class="fa-solid fa-chevron-left me-2"></i>Back
                                 </a>
                                 
-                                <a href="{{ route('result.show', $election) }}" class="btn btn-primary">
-                                    View Results
+                                <a href="{{ route('result.pdf', $election) }}" class="btn btn-primary">
+                                    Download 
                                 </a>
 
-                                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#publishModal">
-                                        <i class="fas fa-globe"></i> Publish
-                                    </button>
+                                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#publishModal">
+                                    <i class="fas fa-globe"></i> Publish
+                                </button>
                                 </div>
                             </div>
                             
