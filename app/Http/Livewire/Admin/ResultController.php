@@ -19,7 +19,6 @@ class ResultController extends Component
     {
         $election = Election::with(['organization', 'candidates'])->findOrFail($electionId);
         
-        // Group candidates by position
         $election->grouped_candidates = $election->candidates
             ->groupBy('position')
             ->map(function ($candidates) {

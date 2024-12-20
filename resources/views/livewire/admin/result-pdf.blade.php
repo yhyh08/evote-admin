@@ -31,7 +31,7 @@
                 <tr>
                     <td>{{ $candidate->candidate_name }}</td>
                     <td>{{ $candidate->votes_count }}</td>
-                    <td>{{ number_format($candidate->percentage, 1) }}%</td>
+                    <td>{{ number_format($candidate->percentage ?? 0, 1) }}%</td>
                 </tr>
                 @endforeach
             </tbody>

@@ -16,12 +16,9 @@ class ResultShowController extends Component
             $query->orderBy('votes_count', 'desc');
         }])->findOrFail($election);
 
-        \Log::info('Candidates Data:', $this->election->candidates->toArray());
-
         $totalVotes = $this->election->candidates->sum('votes_count');
         $this->election->candidates->each(function($candidate) use ($totalVotes) {
-            $candidate->percentage = $totalVotes > 0 ? 
-                ($candidate->votes_count / $totalVotes) * 100 : 0;
+            $candidate->percentage = ($candidate->votes_count / $totalVotes) * 100;
         });
 
         $this->election->grouped_candidates = $this->election->candidates->groupBy('position');
@@ -34,6 +31,15 @@ class ResultShowController extends Component
         }])->findOrFail($electionId);
 
         $election->grouped_candidates = $election->candidates->groupBy('position');
+        $totalVotes = $election->grouped_candidates->sum(function($group) {
+            return $group->sum('votes_count');
+        });
+
+        foreach ($election->grouped_candidates as $position => $candidates) {
+            foreach ($candidates as $candidate) {
+                $candidate->percentage = $totalVotes > 0 ? ($candidate->votes_count / $totalVotes) * 100 : 0;
+            }
+        }
 
         $pdf = Pdf::loadView('livewire.admin.result-pdf', compact('election'));
         return $pdf->download('election_results.pdf');
@@ -45,18 +51,11 @@ class ResultShowController extends Component
             $query->orderBy('votes_count', 'desc');
         }])->findOrFail($election);
 
-        \Log::info('Election Data:', $election->toArray());
-
         return view('livewire.admin.result-show', compact('election'));
     }
 
     public function render()
     {
         return view('livewire.admin.result-show');
-    }
-
-    public function layout()
-    {
-        return 'layouts.app';
     }
 } 
