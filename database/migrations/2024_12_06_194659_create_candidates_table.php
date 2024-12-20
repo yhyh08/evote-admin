@@ -35,7 +35,7 @@ return new class extends Migration
             $table->date('approve_date');
             $table->string('sign');
             $table->integer('votes_count')->default(0);
-            $table->foreignId('election_id');
+            $table->foreignId('election_id')->onDelete('cascade');
             $table->json('nominee_id');
             $table->json('cand_doc_id');
             $table->timestamps();
