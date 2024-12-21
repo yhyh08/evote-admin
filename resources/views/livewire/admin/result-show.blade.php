@@ -1,5 +1,5 @@
 <x-layouts.app>
-<div class="main-content position-relative max-height-vh-100 h-100">
+<div class="main-content">
     <div class="container-fluid py-4">
         <div class="row">
             <div class="col-12">
@@ -28,11 +28,11 @@
                     </div>
 
                     <div class="card-body px-0 pt-0 pb-2">
-                        <div class="p-4">
+                        <div class="p-4" style="overflow: visible;">
                             <h6 class="text-uppercase text-body text-xs font-weight-bolder mb-3">Candidates Results</h6>
                             @forelse($election->grouped_candidates as $position => $candidates)
                                 <h6 class="text-primary text-uppercase text-xs font-weight-bolder mt-4">{{ $position }}</h6>
-                                <div class="table-responsive">
+                                <div class="w-100" style="overflow: visible;">
                                     <table class="table align-items-center mb-0">
                                         <thead>
                                             <tr>
