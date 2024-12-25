@@ -5,6 +5,10 @@ namespace App\Http\Livewire\Admin;
 use Livewire\Component;
 use App\Models\Election;
 use App\Models\Organization;
+use App\Http\Controllers\Controller;
+use DB;
+use Illuminate\Http\Request;
+
 
 class ElectionController extends Component
 {
@@ -237,5 +241,27 @@ class ElectionController extends Component
         if (!empty($value)) {
             $this->end_date = $value;
         }
+    }
+
+    public function getAllElections(){
+        $elections = Election::all();
+        return response()->json($elections);
+    }
+
+    public function getElectionInfo($id){
+        $election = Election::find($id);
+        return response()->json([
+            'election_topic' => $election->election_topic,
+            'type' => $election->type,
+            'position' => $election->position,
+            'description' => $election->description,
+            'start_date' => $election->start_date,
+            'end_date' => $election->end_date,
+            'nominate_period_start' => $election->nominate_period_start,
+            'nominate_period_end' => $election->nominate_period_end,
+            'result_release_date' => $election->result_release_date,
+            'status' => $election->status,
+            'org_id' => $election->org_id
+        ]);
     }
 }

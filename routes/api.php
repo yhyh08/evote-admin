@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Livewire\Admin\ElectionController;
 
 // Add OPTIONS route for CORS preflight
 Route::options('v1/{any}', function() {
@@ -17,4 +18,7 @@ Route::prefix('v1')->group(function () {
     Route::match(['post', 'options'], '/send-otp', [AuthController::class, 'sendOTP']);
     Route::match(['post', 'options'], '/verify-otp', [AuthController::class, 'verifyOTP']);
     Route::get('/check-user/{phone}', [AuthController::class, 'checkUser']);
+    Route::get('/user-info/{phone}', [AuthController::class, 'getUserInfo']);
+    Route::get('/election-info/{id}', [ElectionController::class, 'getElectionInfo']);
+    Route::get('/all-elections', [ElectionController::class,'getAllElections']);
 });

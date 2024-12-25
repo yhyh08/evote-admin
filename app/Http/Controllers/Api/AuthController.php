@@ -130,7 +130,6 @@ class AuthController extends Controller
 
             // Get cached OTP
             $cachedOtp = Cache::get('otp_' . $request->phone);
-            Log::info('Cached OTP exists: ' . ($cachedOtp ? 'yes' : 'no'));
             
             if (!$cachedOtp) {
                 return response()->json([
@@ -164,24 +163,44 @@ class AuthController extends Controller
             // Clear used OTP
             Cache::forget('otp_' . $request->phone);
 
-            Log::info('Login successful for user: ' . $user->id);
-
+            // Return user details including name
             return response()->json([
                 'status' => true,
                 'message' => 'Login successful',
                 'token' => $token,
-                'user' => $user
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'fullname' => $user->fullname,
+                    'phone' => $user->phone,
+                    'role_id' => $user->role_id
+                ]
             ]);
 
         } catch (\Exception $e) {
             Log::error('Error in verifyOTP: ' . $e->getMessage());
-            Log::error($e->getTraceAsString());
             
             return response()->json([
                 'status' => false,
                 'message' => 'Verification failed',
                 'error' => $e->getMessage()
             ], 500);
+        }
+    }
+
+    public function getUserInfo($phone)
+    {
+        $user = User::where('phone', $phone)->first();
+        if($user){
+        return response()->json([
+            'name' => $user->name,
+            'fullname' => $user->fullname,
+            'email' => $user->email,
+            'phone' => $user->phone,
+        ]);
+        }
+        else{
+            return response()->json(['error' => 'User not found']);
         }
     }
 }
