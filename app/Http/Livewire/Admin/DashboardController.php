@@ -29,4 +29,9 @@ class DashboardController extends Component
     {
         return view('livewire.admin.dashboard', ['elections' => $this->elections]);
     }
+
+    public function getLatestElection()
+    {
+        return Election::orderBy('start_date', 'desc')->first();
+    }
 }
