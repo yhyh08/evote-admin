@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Sanctum\HasApiTokens;
 
 class VotingEligibility extends Model
 {
+    use HasApiTokens;
     protected $table = 'voting_eligibility';
     
     protected $fillable = [
