@@ -59,13 +59,54 @@ class AuthController extends Controller
             // Store OTP in cache
             Cache::put('otp_' . $request->phone, $otp, now()->addMinutes(10));
 
-            // For development, return the OTP in response
-            return response()->json([
-                'status' => true,
-                'message' => 'OTP generated successfully',
-                'debug_otp' => $otp,  // Include OTP in response for development
-                'phone' => $request->phone
-            ]);
+            // Verify Twilio credentials exist
+            if (!config('services.twilio.sid') || !config('services.twilio.token') || !config('services.twilio.from')) {
+                Log::error('Twilio credentials are missing');
+                return response()->json([
+                    'status' => false,
+                    'message' => 'SMS service configuration error'
+                ], 500);
+            }
+
+            try {
+                $client = new Client(
+                    config('services.twilio.sid'),
+                    config('services.twilio.token')
+                );
+                
+                $message = $client->messages->create(
+                    $request->phone,
+                    [
+                        'from' => config('services.twilio.from'),
+                        'body' => "Your login OTP is: $otp. Valid for 10 minutes."
+                    ]
+                );
+
+                Log::info('Twilio message sent successfully to: ' . $request->phone);
+                
+                return response()->json([
+                    'status' => true,
+                    'message' => 'OTP sent successfully'
+                ]);
+
+            } catch (\Twilio\Exceptions\TwilioException $e) {
+                Log::error('Twilio error: ' . $e->getMessage());
+                
+                // For development environment only
+                if (app()->environment('local')) {
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'OTP generated (Twilio disabled in development)',
+                        'debug_otp' => $otp,
+                        'twilio_error' => $e->getMessage()
+                    ]);
+                }
+
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Failed to send OTP: ' . $e->getMessage()
+                ], 500);
+            }
 
         } catch (\Exception $e) {
             Log::error('Error in sendOTP: ' . $e->getMessage());
