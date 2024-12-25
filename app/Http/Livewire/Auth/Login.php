@@ -27,6 +27,13 @@ class Login extends Component
         $credentials = $this->validate();
         if(auth()->attempt(['email' => $this->email, 'password' => $this->password], $this->remember_me)) {
             $user = User::where(["email" => $this->email])->first();
+            
+            // Check if user has admin role_id
+            if($user->role_id != 1) { // Changed from role to role_id
+                auth()->logout();
+                return $this->addError('email', 'Only administrators can access this panel.');
+            }
+            
             auth()->login($user, $this->remember_me);
             return redirect()->intended('/dashboard');        
         }

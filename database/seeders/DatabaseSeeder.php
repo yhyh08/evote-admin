@@ -14,17 +14,20 @@ class DatabaseSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
-        User::factory()->create([
-            'name' => 'admin',
-            'email' => 'admin@admin.com',
-            'fullname' => 'James Tan',
-            'phone' => '0123456789',
-            'password' => Hash::make('password')
-        ]);
+        // User::factory()->create([
+        //     'name' => 'admin',
+        //     'email' => 'admin@admin.com',
+        //     'fullname' => 'James Tan',
+        //     'phone' => '0123456789',
+        //     'role' => 1,
+        //     'password' => Hash::make('password')
+        // ]);
 
         $this->call([
+            UserSeeder::class,
+            RoleSeeder::class,
             ElectionCommitteeSeeder::class,
             ElectionSeeder::class,
             OrganizationSeeder::class,
