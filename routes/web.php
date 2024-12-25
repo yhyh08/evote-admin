@@ -51,7 +51,8 @@ Route::get('/login', Login::class)->name('login');
 Route::get('/login/forgot-password', ForgotPassword::class)->name('forgot-password');
 
 Route::get('/reset-password/{id}',ResetPassword::class)->name('reset-password')->middleware('signed');
-Route::middleware('auth')->group(function () {
+
+Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
     Route::get('/election-committee', ElectionCommitteeController::class)->name('election-committee');
     Route::get('/election', ElectionController::class)->name('election');
@@ -64,7 +65,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/report', ReportController::class)->name('report');
     Route::get('/settings', SettingsController::class)->name('settings');
-    
+});
+
+Route::middleware('auth')->group(function () {
     Route::get('/billing', Billing::class)->name('billing');
     Route::get('/profile', Profile::class)->name('profile');
     Route::get('/tables', Tables::class)->name('tables');
