@@ -25,6 +25,7 @@ class OrganizationController extends Component
     ];
     public $confirmingActivation = false;
     public $activateId;
+    public $org_website, $org_email, $org_size;
 
     protected $rules = [
         'org_name' => 'required|min:3',
@@ -34,7 +35,10 @@ class OrganizationController extends Component
         'org_img' => 'nullable|image|max:1024',
         'pic_name' => 'required|min:3',
         'pic_phone' => ['required', 'regex:/^(\+?6?01)[0-46-9]-*[0-9]{7,8}$/'],
-        'pic_email' => 'required|email'
+        'pic_email' => 'required|email',
+        'org_website' => 'required|url',
+        'org_email' => 'required|email',
+        'org_size' => 'required',
     ];
 
     protected function messages()
@@ -72,6 +76,9 @@ class OrganizationController extends Component
             'pic_name' => $this->pic_name,
             'pic_phone' => $this->pic_phone,
             'pic_email' => $this->pic_email,
+            'org_website' => $this->org_website,
+            'org_email' => $this->org_email,
+            'org_size' => $this->org_size,
         ];
 
         if ($this->org_img) {
@@ -107,6 +114,9 @@ class OrganizationController extends Component
         $this->pic_name = $organization->pic_name;
         $this->pic_phone = $organization->pic_phone;
         $this->pic_email = $organization->pic_email;
+        $this->org_website = $organization->org_website;
+        $this->org_email = $organization->org_email;
+        $this->org_size = $organization->org_size;
         
         $this->isOpen = true;
     }
@@ -142,6 +152,9 @@ class OrganizationController extends Component
         $this->pic_name = '';
         $this->pic_phone = '';
         $this->pic_email = '';
+        $this->org_website = '';
+        $this->org_email = '';
+        $this->org_size = '';
     }
 
     public function openModal()
@@ -209,6 +222,9 @@ class OrganizationController extends Component
             'org_desc' => $organization->org_desc,
             'org_cat' => $organization->org_cat,
             'org_address' => $organization->org_address,
+            'org_website' => $organization->org_website,
+            'org_email' => $organization->org_email,
+            'org_size' => $organization->org_size,
             'pic_name' => $organization->pic_name,
             'pic_phone' => $organization->pic_phone,
             'pic_email' => $organization->pic_email,

@@ -17,6 +17,9 @@ return new class extends Migration
             $table->string('org_desc');
             $table->string('org_cat');
             $table->string('org_address');
+            $table->string('org_website');
+            $table->string('org_email');
+            $table->string('org_size');
             $table->string('org_img')->nullable();
             $table->string('pic_name');
             $table->string('pic_phone');

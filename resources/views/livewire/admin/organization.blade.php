@@ -114,6 +114,29 @@
                                 <input type="file" wire:model="org_img" class="form-control">
                                 @error('org_img') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <label>Website</label>
+                                <input type="url" wire:model="org_website" class="form-control">
+                                @error('org_website') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label>Organization Email</label>
+                                <input type="email" wire:model="org_email" class="form-control">
+                                @error('org_email') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label>Organization Size</label>
+                                <select wire:model="org_size" class="form-select">
+                                    <option value="">Select Size</option>
+                                    <option value="1-50">1-50</option>
+                                    <option value="51-200">51-200</option>
+                                    <option value="201-500">201-500</option>
+                                    <option value="501-1000">501-1000</option>
+                                    <option value="1000+">1000+</option>
+                                </select>
+                                @error('org_size') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
                             <hr>
                             <h6>Person in Charge Details</h6>
                             <div class="col-md-4 mb-3">
@@ -222,6 +245,20 @@
                                 <div class="col-12 mb-3">
                                     <label class="text-muted mb-1">Address:</label>
                                     <p class="mb-3">{{ $selectedOrg->org_address }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="text-muted mb-1">Website:</label>
+                                    <p class="mb-3">{{ $selectedOrg->org_website }}</p>
+                                </div>
+                                
+                                <div class="col-md-4 mb-3">
+                                    <label class="text-muted mb-1">Organization Email:</label>
+                                    <p class="mb-3">{{ $selectedOrg->org_email }}</p>
+                                </div>
+                                
+                                <div class="col-md-4 mb-3">
+                                    <label class="text-muted mb-1">Organization Size:</label>
+                                    <p class="mb-3">{{ $selectedOrg->org_size }}</p>
                                 </div>
                                 
                                 <div class="col-12">
