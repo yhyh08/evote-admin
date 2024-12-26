@@ -196,4 +196,24 @@ class OrganizationController extends Component
         $this->confirmingActivation = false;
         $this->activateId = null;
     }
+
+    public function getAllOrganizations(){
+        $organizations = Organization::all();
+        return response()->json($organizations);
+    }
+
+    public function getOrganizationInfo($id){
+        $organization = Organization::find($id);
+        return response()->json([
+            'org_name' => $organization->org_name,
+            'org_desc' => $organization->org_desc,
+            'org_cat' => $organization->org_cat,
+            'org_address' => $organization->org_address,
+            'pic_name' => $organization->pic_name,
+            'pic_phone' => $organization->pic_phone,
+            'pic_email' => $organization->pic_email,
+            'org_img' => $organization->org_img,
+            'is_active' => $organization->is_active
+        ]);
+    }
 }
