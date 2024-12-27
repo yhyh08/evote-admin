@@ -162,6 +162,26 @@ class NominationController extends Component
         }
     }
 
+    public function getAllCandidates(){
+        $candidates = Candidate::all();
+        return response()->json($candidates);
+    }
+
+    public function getCandidateData($candidateId)
+    {
+        try {
+            $candidate = Candidate::with('documents')->find($candidateId);
+
+            if (!$candidate) {
+                return response()->json(['error' => 'Candidate not found.'], 404);
+            }
+
+            return response()->json(['candidate' => $candidate], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to retrieve candidate data. Error: ' . $e->getMessage()], 500);
+        }
+    }
+
     public function render()
     {
         $nominations = Nomination::with(['election', 'candidate'])

@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Livewire\Admin\ElectionController;
 use App\Http\Livewire\Admin\DashboardController;
 use App\Http\Livewire\Admin\OrganizationController;
+use App\Http\Livewire\Admin\NominationController;
 
 Route::options('v1/{any}', function() {
     return response()->json([], 200);
@@ -25,4 +26,14 @@ Route::prefix('v1')->group(function () {
     Route::get('/latest-election', [DashboardController::class, 'getLatestElection']);
     Route::get('/all-organizations', [OrganizationController::class,'getAllOrganizations']);
     Route::get('/organization-info/{id}', [OrganizationController::class, 'getOrganizationInfo']);
+    Route::get('/all-candidates', [NominationController::class,'getAllCandidates']);
+    Route::get('/candidate/{id}', [NominationController::class, 'getCandidateData']);
+
+    Route::get('/election-candidates/{election_id}', function ($election_id) {
+        $candidates = DB::table('candidates')
+            ->where('election_id', $election_id)
+            ->get();
+        
+        return response()->json(['candidates' => $candidates]);
+    });
 });

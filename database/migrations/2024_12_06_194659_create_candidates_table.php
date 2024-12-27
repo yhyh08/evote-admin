@@ -27,10 +27,10 @@ return new class extends Migration
             $table->decimal('income', 10, 2);
             $table->string('marriage_status');
             $table->string('position');
-            $table->string('short_biography');
-            $table->string('manifesto');
+            $table->string('short_biography',1000);
+            $table->string('manifesto',1000);
             $table->string('status');
-            $table->string('reason');
+            $table->string('reason',500);
             $table->date('receive_date');
             $table->date('approve_date');
             $table->string('sign');
