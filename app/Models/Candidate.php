@@ -17,16 +17,19 @@ class Candidate extends Model
 
     protected $fillable = [
         'name',
+        'phone',
+        'email',
+        'status',
         'election_id',
+        'posiiton',
         'votes_count',
         'candidate_name',
-        'status',
         'reason',
     ];
 
     public function nominations()
     {
-        return $this->hasMany(Nomination::class, 'candidate_id', 'candidate_id');
+        return $this->hasMany(Nomination::class);
     }
 
     public function documents()

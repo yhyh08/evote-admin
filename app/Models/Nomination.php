@@ -11,6 +11,11 @@ class Nomination extends Model
 
     protected $primaryKey = 'nominee_id';
 
+    protected $fillable = [
+        'candidate_id',
+        'election_id',
+    ];
+
     public function election()
     {
         return $this->belongsTo(Election::class, 'election_id', 'election_id');

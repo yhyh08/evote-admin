@@ -9,6 +9,7 @@ use App\Models\Election;
 use App\Models\CandidateDocs;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class NominationController extends Component
 {
@@ -200,8 +201,7 @@ class NominationController extends Component
     {
         try {
             $candidate = Candidate::findOrFail($id);
-            
-            // Increment the vote count
+        
             $candidate->votes_count = $candidate->votes_count + 1;
             $candidate->save();
             
@@ -215,6 +215,113 @@ class NominationController extends Component
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to count vote: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getCandidatesByStatus($status = 'Pending')
+    {
+        try {
+            $statusMap = [
+                '1' => 'Pending',
+                '2' => 'Approved',
+                '3' => 'Rejected'
+            ];
+
+            $searchStatus = isset($statusMap[$status]) ? $statusMap[$status] : $status;
+
+            $candidates = DB::table('candidates')
+                ->select(
+                    'candidates.candidate_id',
+                    'candidates.candidate_name',
+                    'candidates.candidate_phone',
+                    'candidates.candidate_email',
+                    'candidates.status',
+                    'candidates.position',
+                    'candidates.created_at',
+                    'candidates.election_id',
+                    'elections.election_topic',
+                    'elections.start_date',
+                    'elections.end_date',
+                    'elections.type',
+                    'elections.status as election_status'
+                )
+                ->leftJoin('elections', 'candidates.election_id', '=', 'elections.election_id')
+                ->where('candidates.status', $searchStatus)
+                ->get()
+                ->map(function ($candidate) {
+                    return [
+                        'id' => $candidate->candidate_id,
+                        'name' => $candidate->candidate_name,
+                        'phone' => $candidate->candidate_phone ?? null,
+                        'email' => $candidate->candidate_email ?? null,
+                        'position' => $candidate->position ?? null,
+                        'status' => $candidate->status,
+                        'created_at' => $candidate->created_at,
+                        'election' => [
+                            'id' => $candidate->election_id,
+                            'topic' => $candidate->election_topic,
+                            'type' => $candidate->type,
+                            'status' => $candidate->election_status,
+                            'period' => [
+                                'start' => $candidate->start_date,
+                                'end' => $candidate->end_date
+                            ]
+                        ]
+                    ];
+                });
+
+            // Group candidates by election topic
+            $groupedCandidates = $candidates->groupBy(function ($candidate) {
+                return $candidate['election']['topic'] ?? 'Unassigned';
+            })->map(function ($candidates, $electionTopic) {
+                $firstCandidate = $candidates->first();
+                return [
+                    'election_topic' => $electionTopic,
+                    'election_details' => [
+                        'id' => $firstCandidate['election']['id'],
+                        'type' => $firstCandidate['election']['type'],
+                        'status' => $firstCandidate['election']['status'],
+                        'period' => $firstCandidate['election']['period']
+                    ],
+                    'candidates' => $candidates->map(function ($candidate) {
+                        // Remove nested election data to avoid redundancy
+                        unset($candidate['election']);
+                        return $candidate;
+                    })
+                ];
+            })->values();
+
+            return response()->json([
+                'success' => true,
+                'status_requested' => $status,
+                'status_mapped_to' => $searchStatus,
+                'total_candidates' => $candidates->count(),
+                'elections' => $groupedCandidates,
+                'debug_info' => [
+                    'total_in_db' => DB::table('candidates')->count(),
+                    'status_counts' => DB::table('candidates')
+                        ->select('status', DB::raw('count(*) as count'))
+                        ->groupBy('status')
+                        ->get()
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Error in getCandidatesByStatus:', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to fetch candidates: ' . $e->getMessage(),
+                'debug_info' => [
+                    'requested_status' => $status,
+                    'error' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine()
+                ]
             ], 500);
         }
     }

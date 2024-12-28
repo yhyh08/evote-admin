@@ -7,15 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class Election extends Model
 {
     protected $fillable = [
+        'name',
+        'status',
+        'start_date',
+        'end_date',
         'election_topic',
         'type',
         'position',
         'description',
-        'start_date',
-        'end_date',
         'nominate_period_start',
         'nominate_period_end',
-        'status',
         'org_id'
     ];
 
@@ -37,5 +38,10 @@ class Election extends Model
     public function candidates()
     {
         return $this->hasMany(Candidate::class, 'election_id');
+    }
+
+    public function nominations()
+    {
+        return $this->hasMany(Nomination::class);
     }
 } 

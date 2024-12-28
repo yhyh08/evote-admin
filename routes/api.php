@@ -37,4 +37,6 @@ Route::prefix('v1')->group(function () {
         
         return response()->json(['candidates' => $candidates]);
     });
+
+    Route::get('/candidate/status/{status?}', [NominationController::class, 'getCandidatesByStatus']);
 });
