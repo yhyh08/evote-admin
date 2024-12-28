@@ -8,6 +8,7 @@ use App\Models\Candidate;
 use App\Models\Election;
 use App\Models\CandidateDocs;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\DB;
 
 class NominationController extends Component
 {
@@ -193,5 +194,28 @@ class NominationController extends Component
             'nominations' => $nominations,
             'candidates' => Candidate::all()
         ]);
+    }
+
+    public function vote($id)
+    {
+        try {
+            $candidate = Candidate::findOrFail($id);
+            
+            // Increment the vote count
+            $candidate->votes_count = $candidate->votes_count + 1;
+            $candidate->save();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Vote counted successfully',
+                'votes_count' => $candidate->votes_count,
+                'data' => $candidate
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to count vote: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

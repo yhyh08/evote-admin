@@ -28,6 +28,7 @@ Route::prefix('v1')->group(function () {
     Route::get('/organization-info/{id}', [OrganizationController::class, 'getOrganizationInfo']);
     Route::get('/all-candidates', [NominationController::class,'getAllCandidates']);
     Route::get('/candidate/{id}', [NominationController::class, 'getCandidateData']);
+    Route::post('candidate/{id}/vote', [NominationController::class, 'vote']);
 
     Route::get('/election-candidates/{election_id}', function ($election_id) {
         $candidates = DB::table('candidates')
