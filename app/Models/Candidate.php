@@ -16,15 +16,30 @@ class Candidate extends Model
     ];
 
     protected $fillable = [
-        'name',
-        'phone',
-        'email',
-        'status',
-        'election_id',
-        'posiiton',
-        'votes_count',
         'candidate_name',
+        'candidate_phone',
+        'candidate_email',
+        'candidate_gender',
+        'candidate_image',
+        'candidate_ic',
+        'candidate_dob',
+        'candidate_address',
+        'nationality',
+        'religion',
+        'job',
+        'income',
+        'marriage_status',
+        'short_biography',
+        'manifesto',
+        'position',
+        'status',
         'reason',
+        'sign',
+        'votes_count',
+        'election_id',
+        'user_id',
+        'nominee_id',
+        'cand_doc_id',
     ];
 
     public function nominations()
@@ -53,6 +68,11 @@ class Candidate extends Model
     public function election()
     {
         return $this->belongsTo(Election::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }
     

@@ -12,8 +12,13 @@ class Nomination extends Model
     protected $primaryKey = 'nominee_id';
 
     protected $fillable = [
+        'nominee_name',
+        'nominee_phone',
+        'nominee_email',
+        'reason',
         'candidate_id',
         'election_id',
+        'org_id',
     ];
 
     public function election()
