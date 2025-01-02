@@ -66,4 +66,8 @@ Route::prefix('v1')->group(function () {
     Route::get('/candidate/progress/{user_id}', [NominationController::class, 'getSavedProgress']);
 
     Route::post('/save-candidate-info', [NominationController::class, 'saveCandidateInfo']);
+
+    Route::post('/save-nominations', [NominationController::class, 'saveNomination']);
+
+    Route::post('/save-candidate-documents', [NominationController::class, 'saveCandidateDoc']);
 });

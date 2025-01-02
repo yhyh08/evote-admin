@@ -10,6 +10,7 @@ class Nomination extends Model
     use HasFactory;
 
     protected $primaryKey = 'nominee_id';
+    public $incrementing = false;
 
     protected $fillable = [
         'nominee_name',

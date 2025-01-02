@@ -33,8 +33,8 @@ return new class extends Migration
             $table->string('reason',500);
             $table->string('sign');
             $table->integer('votes_count')->default(0);
-            $table->foreignId('user_id');
-            $table->foreignId('election_id')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('election_id');
             $table->json('nominee_id');
             $table->json('cand_doc_id');
             $table->timestamps();
