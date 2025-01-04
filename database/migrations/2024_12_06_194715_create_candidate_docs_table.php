@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('candidate_docs', function (Blueprint $table) {
             $table->id('cand_doc_id');
             $table->string('document');
-            $table->text('description');
             $table->foreignId('candidate_id');
             $table->timestamps();
         });

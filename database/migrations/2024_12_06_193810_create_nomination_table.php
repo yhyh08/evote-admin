@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('nominee_phone');
             $table->string('nominee_email');
             $table->string('reason',500);
-            $table->foreignId('election_id');
             $table->foreignId('candidate_id');
             $table->foreignId('org_id');
             $table->timestamps();

@@ -7,6 +7,7 @@ use App\Models\Nomination;
 use App\Models\Candidate;
 use App\Models\Election;
 use App\Models\CandidateDocs;
+use App\Models\User;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class NominationController extends Component
 {
@@ -29,10 +31,10 @@ class NominationController extends Component
 
     protected $listeners = ['refreshComponent' => '$refresh'];
 
-    public function viewNomination($electionId)
+    public function viewNomination($candidateId)
     {
-        $nominations = Nomination::with(['candidate.documents', 'election'])
-            ->where('election_id', $electionId)
+        $nominations = Nomination::with(['candidate.documents', 'candidate'])
+            ->where('candidate_id', $candidateId)
             ->get();
 
         $groupedNominations = $nominations->mapToGroups(function ($nomination) {
@@ -191,10 +193,10 @@ class NominationController extends Component
 
     public function render()
     {
-        $nominations = Nomination::with(['election', 'candidate'])
-            ->orderBy('election_id')
+        $nominations = Nomination::with(['candidate', 'candidate'])
+            ->orderBy('candidate_id')
             ->get()
-            ->groupBy('election_id');
+            ->groupBy('candidate_id');
 
         return view('livewire.admin.nomination', [
             'nominations' => $nominations,
@@ -276,7 +278,6 @@ class NominationController extends Component
                     ];
                 });
 
-            // Group candidates by election topic
             $groupedCandidates = $candidates->groupBy(function ($candidate) {
                 return $candidate['election']['topic'] ?? 'Unassigned';
             })->map(function ($candidates, $electionTopic) {
@@ -290,7 +291,6 @@ class NominationController extends Component
                         'period' => $firstCandidate['election']['period']
                     ],
                     'candidates' => $candidates->map(function ($candidate) {
-                        // Remove nested election data to avoid redundancy
                         unset($candidate['election']);
                         return $candidate;
                     })
@@ -345,17 +345,16 @@ class NominationController extends Component
 
     public function saveCandidateInfo(Request $request)
     {
-        Log::info('Incoming candidate data:', $request->all());
-
         try {
             $validated = $request->validate([
-                'candidate_name' => 'required|string',
+                'election_id' => 'required',
+                'user_id' => 'required',
+                'candidate_name' => 'required',
                 'candidate_image' => 'nullable|string',
                 'candidate_phone' => 'required|string',
                 'candidate_email' => 'required|email',
                 'candidate_gender' => 'required|string',
                 'candidate_ic' => 'required|string',
-                'candidate_dob' => 'required|date',
                 'candidate_address' => 'required|string',
                 'nationality' => 'required|string',
                 'religion' => 'required|string',
@@ -365,77 +364,45 @@ class NominationController extends Component
                 'marriage_status' => 'required|string',
                 'short_biography' => 'nullable|string',
                 'manifesto' => 'nullable|string',
-                'reason' => 'required|string',
-                'sign' => 'nullable|string',
-                'election_id' => 'required|exists:elections,election_id',
-                'user_id' => 'required|exists:users,user_id',
                 'reason' => 'nullable|string',
-                'nominee_id' => 'nullable|string',
-                'cand_doc_id' => 'nullable|string',
+                'sign' => 'nullable|string',
+                'status' => 'required|string',
+                'votes_count' => 'required|integer',
+                'nominee_id' => 'nullable|array',
+                'cand_doc_id' => 'nullable|array',
             ]);
 
-            // Get the last candidate_id
-            $lastCandidate = Candidate::orderBy('candidate_id', 'desc')->first();
-            $nextCandidateId = $lastCandidate ? $lastCandidate->candidate_id + 1 : 1;
+            $data = array_merge($validated, [
+                'nominee_id' => json_encode($validated['nominee_id']),
+                'cand_doc_id' => json_encode($validated['cand_doc_id']),
+            ]);
 
-            if (!isset($validated['candidate_image'])) {
-                $validated['candidate_image'] = 'default.jpg';
-            }   
-
-            // Handle base64 image if provided
-            if (!empty($validated['candidate_image']) && strpos($validated['candidate_image'], 'base64') !== false) {
-                try {
-                    $image_parts = explode(",", $validated['candidate_image']);
-                    $image_base64 = end($image_parts);
-                    $image_type = 'png'; // Default to PNG if type cannot be determined
-                    $imageName = 'candidate_' . time() . '.' . $image_type;
-                    
-                    Storage::disk('public')->put('candidate-images/' . $imageName, base64_decode($image_base64));
-                    $validated['candidate_image'] = 'candidate-images/' . $imageName;
-                } catch (\Exception $e) {
-                    Log::error('Image processing error:', [
-                        'error' => $e->getMessage(),
-                        'image_data_length' => strlen($validated['candidate_image'])
-                    ]);
-                    $validated['candidate_image'] = null;
-                }
-            } else {
-                $validated['candidate_image'] = null;
+            $user = User::find($data['user_id']);
+            if (!$user) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'User not found'
+                ], 404);
             }
 
-            // Set default values and include the new candidate_id
-            $candidateData = array_merge($validated, [
-                'candidate_id' => $nextCandidateId,
-                'candidate_image' => $validated['candidate_image'] ?? 'default.jpg',
-                'status' => 'Pending',
-                'votes_count' => 0,
-            ]);
-
-            Log::info('Final candidate data before save:', $candidateData);
-
-            $candidate = Candidate::create($candidateData);
+            $candidate = Candidate::create($data);
 
             return response()->json([
-                'success' => true,
+                'status' => 'success',
                 'message' => 'Candidate information saved successfully',
                 'data' => $candidate
             ], 201);
 
         } catch (\Exception $e) {
-            Log::error('Error saving candidate information:', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-                'request_data' => $request->all()
+            \Log::error('Error saving candidate:', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ]);
-
+            
             return response()->json([
-                'success' => false,
+                'status' => 'error',
                 'message' => 'Failed to save candidate information',
-                'error' => $e->getMessage(),
-                'debug_info' => [
-                    'request_data' => $request->all(),
-                    'validation_errors' => $e instanceof ValidationException ? $e->errors() : null
-                ]
+                'debug_message' => $e->getMessage()
             ], 500);
         }
     }
@@ -448,26 +415,25 @@ class NominationController extends Component
                 'nominee_phone' => 'required|string',
                 'nominee_email' => 'required|email',
                 'reason' => 'required|string|max:500',
-                'election_id' => 'required|exists:elections,election_id',
                 'candidate_id' => 'required|exists:candidates,candidate_id',
-                'org_id' => 'required|exists:organizations,id'
+                'org_id' => 'required|exists:organizations,org_id'
             ]);
 
-            // Get the last nominee_id
-            $lastNomination = Nomination::orderBy('nominee_id', 'desc')->first();
+            $lastNomination = Nomination::latest('nominee_id')->first();
             $nextNomineeId = $lastNomination ? $lastNomination->nominee_id + 1 : 1;
 
-            // Create new nomination with incremented nominee_id
             $nomination = new Nomination();
             $nomination->nominee_id = $nextNomineeId;
             $nomination->nominee_name = $validated['nominee_name'];
             $nomination->nominee_phone = $validated['nominee_phone'];
             $nomination->nominee_email = $validated['nominee_email'];
             $nomination->reason = $validated['reason'];
-            $nomination->election_id = $validated['election_id'];
             $nomination->candidate_id = $validated['candidate_id'];
             $nomination->org_id = $validated['org_id'];
-            $nomination->save();
+
+            if (!$nomination->save()) {
+                throw new \Exception('Failed to save nomination to database');
+            }
 
             return response()->json([
                 'success' => true,
@@ -476,7 +442,25 @@ class NominationController extends Component
                 'data' => $nomination
             ], 201);
 
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('Validation error:', [
+                'errors' => $e->errors(),
+                'request_data' => $request->all()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
+
         } catch (\Exception $e) {
+            \Log::error('Error saving nomination:', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'request_data' => $request->all()
+            ]);
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to save nomination',
@@ -484,46 +468,173 @@ class NominationController extends Component
             ], 500);
         }
     }
-
-    public function saveCandidateDoc(Request $request)
+    public function saveDocuments(Request $request)
     {
         try {
-            $validated = $request->validate([
-                'document' => 'required|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
-                'description' => 'required|string',
-                'candidate_id' => 'required|exists:candidates,candidate_id'
+            $request->validate([
+                'candidate_id' => 'required|exists:candidates,candidate_id',
+                'document' => 'required|file',
             ]);
 
-            // Handle file upload
             if ($request->hasFile('document')) {
                 $file = $request->file('document');
                 $fileName = time() . '_' . $file->getClientOriginalName();
-                $filePath = $file->storeAs('candidate-documents', $fileName, 'public');
+                $path = $file->storeAs('documents', $fileName, 'public');
+
+                // Save the file path to the database
+                $doc = new CandidateDocs();
+                $doc->candidate_id = $request->candidate_id;
+                $doc->document = $path; // Save the file path to the 'document' field
+                $doc->save();
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Document saved successfully',
+                    'file_path' => asset('storage/' . $path) // Return the accessible URL
+                ]);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'No document file received'
+            ], 400);
+
+        } catch (\Exception $e) {
+            \Log::error('Document upload error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to save document',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+    public function saveCandidateDoc(Request $request)
+    {
+        try {
+            \Log::info('Incoming request data:', [
+                'has_file' => $request->hasFile('document'),
+                'all_data' => $request->all()
+            ]);
+
+            // Get the latest candidate ID first
+            $latestCandidate = Candidate::latest()->first();
+            
+            if (!$latestCandidate) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No candidate found'
+                ], 404);
+            }
+
+            // Add candidate_id to the request
+            $request->merge(['candidate_id' => $latestCandidate->candidate_id]);
+
+            // Validate single file - only allow pdf, jpg, jpeg, png
+            $validated = $request->validate([
+                'document' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120', // 5MB max
+                'candidate_id' => 'required|exists:candidates,candidate_id'
+            ]);
+
+            // Handle single file upload
+            if ($request->hasFile('document')) {
+                $file = $request->file('document');
+                
+                // Get file extension
+                $extension = $file->getClientOriginalExtension();
+                
+                // Create unique filename
+                $fileName = time() . '_' . uniqid() . '.' . $extension;
+                
+                // Store file in appropriate directory
+                $directory = 'candidate-documents/' . $latestCandidate->candidate_id;
+                $filePath = $file->storeAs($directory, $fileName, 'public');
 
                 // Create new candidate document record
                 $candidateDoc = CandidateDocs::create([
                     'document' => $filePath,
-                    'description' => $validated['description'],
-                    'candidate_id' => $validated['candidate_id']
+                    'candidate_id' => $latestCandidate->candidate_id,
+                    'file_type' => $extension,
+                    'original_name' => $file->getClientOriginalName()
                 ]);
 
                 return response()->json([
                     'success' => true,
                     'message' => 'Document uploaded successfully',
-                    'data' => $candidateDoc
+                    'data' => [
+                        'document_id' => $candidateDoc->id,
+                        'file_path' => $filePath,
+                        'file_type' => $extension,
+                        'original_name' => $file->getClientOriginalName(),
+                        'size' => $file->getSize(),
+                        'candidate_id' => $latestCandidate->candidate_id
+                    ]
                 ], 201);
             }
 
             return response()->json([
                 'success' => false,
-                'message' => 'No document file provided'
+                'message' => 'No document provided'
             ], 400);
 
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('Validation error:', [
+                'errors' => $e->errors(),
+                'request' => $request->all()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
+
         } catch (\Exception $e) {
+            \Log::error('Document upload error:', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to save document',
                 'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getCandidateId(Request $request)
+    {
+        try {
+            // Get the most recent candidate submission
+            $candidate = Candidate::latest()
+                ->first(['candidate_id', 'candidate_name', 'created_at']);
+
+            if (!$candidate) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'No candidate submissions found'
+                ], 404);
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'data' => [
+                    'candidate_id' => $candidate->candidate_id,
+                    'candidate_name' => $candidate->candidate_name,
+                    'submitted_at' => $candidate->created_at
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Error fetching candidate ID:', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to fetch candidate information',
+                'debug_message' => $e->getMessage()
             ], 500);
         }
     }

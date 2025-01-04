@@ -18,14 +18,8 @@ class Nomination extends Model
         'nominee_email',
         'reason',
         'candidate_id',
-        'election_id',
         'org_id',
     ];
-
-    public function election()
-    {
-        return $this->belongsTo(Election::class, 'election_id', 'election_id');
-    }
 
     public function candidate()
     {

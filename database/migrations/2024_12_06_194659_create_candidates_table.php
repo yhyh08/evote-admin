@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('candidate_email');
             $table->string('candidate_gender');
             $table->string('candidate_ic');
-            $table->string('candidate_dob');
             $table->string('candidate_address');
             $table->string('nationality');
             $table->string('religion');

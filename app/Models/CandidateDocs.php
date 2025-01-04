@@ -11,6 +11,11 @@ class CandidateDocs extends Model
 
     protected $primaryKey = 'cand_doc_id';
 
+    protected $fillable = [
+        'cand_doc_id',
+        'candidate_id',
+    ];
+
     public function candidate()
     {
         return $this->belongsTo(Candidate::class, 'candidate_id', 'candidate_id');

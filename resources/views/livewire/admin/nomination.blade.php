@@ -25,11 +25,12 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($nominations as $election_id => $electionNominations)
+                                        @foreach($nominations as $candidate_id => $candidateNominations)
                                             @php
-                                                $firstNomination = $electionNominations->first();
-                                                $nomineeCount = $electionNominations->count();
+                                                $firstNomination = $candidateNominations->first();
+                                                $nomineeCount = $candidateNominations->count();
                                                 $candidate = $firstNomination->candidate;
+                                                $electionTopic = $candidate->election->election_topic ?? 'N/A';
                                             @endphp
                                             <tr>
                                                 <td class="ps-3">
@@ -37,7 +38,7 @@
                                                 </td>
                                                 <td class="ps-3">
                                                     <p class="text-xs font-weight-bold mb-0">
-                                                        {{ $firstNomination->election->election_topic ?? 'N/A' }}
+                                                        {{ $electionTopic }}
                                                     </p>
                                                 </td>
                                                 <td class="ps-3">
@@ -59,7 +60,7 @@
                                                     </span>
                                                 </td>
                                                 <td class="ps-3">
-                                                    <a href="#" wire:click.prevent="viewNomination({{ $election_id }})" 
+                                                    <a href="#" wire:click.prevent="viewNomination({{ $candidate_id }})" 
                                                     class="me-3" data-bs-toggle="tooltip" 
                                                     data-bs-original-title="View details">
                                                         <i class="fa-solid fa-file-lines text-secondary"></i>
@@ -216,10 +217,7 @@
                                                                     <label class="text-xs text-secondary mb-0">IC Number</label>
                                                                     <p class="text-sm mb-2">{{ $candidate->candidate_ic ?? 'N/A' }}</p>
                                                                 </div>
-                                                                <div class="mb-2">
-                                                                    <label class="text-xs text-secondary mb-0">Date of Birth</label>
-                                                                    <p class="text-sm mb-2">{{ $candidate->candidate_dob ?? 'N/A' }}</p>
-                                                                </div>
+                                                                
                                                                 <div class="mb-2">
                                                                     <label class="text-xs text-secondary mb-0">Position</label>
                                                                     <p class="text-sm mb-2">{{ $candidate->position ?? 'N/A' }}</p>
@@ -244,7 +242,7 @@
                                                                 </div>
                                                                 <div class="mb-2">
                                                                     <label class="text-xs text-secondary mb-0">Income</label>
-                                                                    <p class="text-sm mb-2">RM {{ number_format($candidate->income ?? 0, 2) }}</p>
+                                                                    <p class="text-sm mb-2">RM {{ $candidate->income ?? 'N/A' }}</p>
                                                                 </div>
                                                                 <div class="mb-2">
                                                                     <label class="text-xs text-secondary mb-0">Marriage Status</label>

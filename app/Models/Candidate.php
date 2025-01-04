@@ -12,34 +12,34 @@ class Candidate extends Model
     protected $primaryKey = 'candidate_id';
 
     protected $casts = [
-        'nominee_ids' => 'array'
+        'nominee_id' => 'json',
+        'cand_doc_id' => 'json',
     ];
 
     protected $fillable = [
         'candidate_name',
+        'candidate_image',
         'candidate_phone',
         'candidate_email',
         'candidate_gender',
-        'candidate_image',
         'candidate_ic',
-        'candidate_dob',
         'candidate_address',
         'nationality',
         'religion',
         'job',
         'income',
+        'position',
         'marriage_status',
         'short_biography',
         'manifesto',
-        'position',
-        'status',
         'reason',
         'sign',
-        'votes_count',
         'election_id',
+        'status',
+        'votes_count',
         'user_id',
         'nominee_id',
-        'cand_doc_id',
+        'cand_doc_id'
     ];
 
     public function nominations()
@@ -65,11 +65,11 @@ class Candidate extends Model
             ->whereIn('nominee_id', $this->nominee_ids ?? []);
     }
 
-    public function election()
-    {
-        return $this->belongsTo(Election::class);
+    public function election() {
+        return $this->belongsTo(Election::class, 'election_id', 'election_id');
     }
 
+    
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');

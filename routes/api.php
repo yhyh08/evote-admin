@@ -69,5 +69,7 @@ Route::prefix('v1')->group(function () {
 
     Route::post('/save-nominations', [NominationController::class, 'saveNomination']);
 
-    Route::post('/save-candidate-documents', [NominationController::class, 'saveCandidateDoc']);
+    Route::post('/save-candidate-documents', [NominationController::class, 'saveDocuments']);
+
+    Route::get('/get-candidateid', [NominationController::class, 'getCandidateId']);
 });
