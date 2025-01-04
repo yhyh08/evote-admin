@@ -29,18 +29,6 @@ Route::prefix('v1')->group(function () {
     Route::get('/all-candidates', [NominationController::class,'getAllCandidates']);
     Route::get('/candidate/{id}', [NominationController::class, 'getCandidateData']);
     Route::post('candidate/{id}/vote', [NominationController::class, 'vote']);
-    // Route::post('/save-nominee', [NominationController::class, 'saveNominee']);
-    // Route::post('/save-candidate', [NominationController::class, 'saveCandidate']);
-    // Route::post('/save-candidate-docs', [NominationController::class, 'saveCandidateDocs']);
-    
-    // Route::post('/candidates', [NominationController::class, 'store']);
-    // Route::post('/candidate-additional-info/{id}', [NominationController::class, 'updateAdditionalInfo']);
-    
-    // // Nomination routes
-    // Route::post('/nominations', [NominationController::class, 'store']);
-    // // Document routes
-    // Route::post('/candidate-documents', [DocumentController::class, 'store']);
-
     Route::get('/election-candidates/{election_id}', function ($election_id) {
         $candidates = DB::table('candidates')
             ->where('election_id', $election_id)
@@ -51,18 +39,6 @@ Route::prefix('v1')->group(function () {
 
     Route::get('/candidate/status/{status?}', [NominationController::class, 'getCandidatesByStatus']);
 
-    // // Step 1-3: Candidate Information (combines into one table)
-    // Route::post('/candidate/step1', [NominationController::class, 'saveStep1']); // Election topic
-    // Route::post('/candidate/step2', [NominationController::class, 'saveStep2']); // Basic candidate info
-    // Route::post('/candidate/step3', [NominationController::class, 'saveStep3']); // Additional candidate info
-
-    // // Step 4: Nominee Information
-    // Route::post('/nomination/step4', [NominationController::class, 'saveStep4']); // Nomination details
-
-    // // Step 5: Documentation
-    // Route::post('/candidate/step5/documents', [NominationController::class, 'saveStep5']); // Upload documents
-
-    // Optional: Get saved progress
     Route::get('/candidate/progress/{user_id}', [NominationController::class, 'getSavedProgress']);
 
     Route::post('/save-candidate-info', [NominationController::class, 'saveCandidateInfo']);
