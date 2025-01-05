@@ -7,6 +7,7 @@ use App\Http\Livewire\Admin\ElectionController;
 use App\Http\Livewire\Admin\DashboardController;
 use App\Http\Livewire\Admin\OrganizationController;
 use App\Http\Livewire\Admin\NominationController;
+use App\Http\Livewire\Admin\ResultController;
 
 Route::options('v1/{any}', function() {
     return response()->json([], 200);
@@ -48,4 +49,10 @@ Route::prefix('v1')->group(function () {
     Route::post('/save-candidate-documents', [NominationController::class, 'saveDocuments']);
 
     Route::get('/get-candidateid', [NominationController::class, 'getCandidateId']);
+
+    Route::get('/election/results', [ResultController::class, 'getAllResults']);
+
+    // Route::get('/election/{electionId}/result', [ResultController::class, 'getResult']);
+
+    // Route::get('/election/{electionId}/publish', [ResultController::class, 'publishResult']);
 });

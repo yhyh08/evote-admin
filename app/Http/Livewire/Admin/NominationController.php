@@ -508,99 +508,99 @@ class NominationController extends Component
             ], 500);
         }
     }
-    public function saveCandidateDoc(Request $request)
-    {
-        try {
-            \Log::info('Incoming request data:', [
-                'has_file' => $request->hasFile('document'),
-                'all_data' => $request->all()
-            ]);
+    // public function saveCandidateDoc(Request $request)
+    // {
+    //     try {
+    //         \Log::info('Incoming request data:', [
+    //             'has_file' => $request->hasFile('document'),
+    //             'all_data' => $request->all()
+    //         ]);
 
-            // Get the latest candidate ID first
-            $latestCandidate = Candidate::latest()->first();
+    //         // Get the latest candidate ID first
+    //         $latestCandidate = Candidate::latest()->first();
             
-            if (!$latestCandidate) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'No candidate found'
-                ], 404);
-            }
+    //         if (!$latestCandidate) {
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'message' => 'No candidate found'
+    //             ], 404);
+    //         }
 
-            // Add candidate_id to the request
-            $request->merge(['candidate_id' => $latestCandidate->candidate_id]);
+    //         // Add candidate_id to the request
+    //         $request->merge(['candidate_id' => $latestCandidate->candidate_id]);
 
-            // Validate single file - only allow pdf, jpg, jpeg, png
-            $validated = $request->validate([
-                'document' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120', // 5MB max
-                'candidate_id' => 'required|exists:candidates,candidate_id'
-            ]);
+    //         // Validate single file - only allow pdf, jpg, jpeg, png
+    //         $validated = $request->validate([
+    //             'document' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120', // 5MB max
+    //             'candidate_id' => 'required|exists:candidates,candidate_id'
+    //         ]);
 
-            // Handle single file upload
-            if ($request->hasFile('document')) {
-                $file = $request->file('document');
+    //         // Handle single file upload
+    //         if ($request->hasFile('document')) {
+    //             $file = $request->file('document');
                 
-                // Get file extension
-                $extension = $file->getClientOriginalExtension();
+    //             // Get file extension
+    //             $extension = $file->getClientOriginalExtension();
                 
-                // Create unique filename
-                $fileName = time() . '_' . uniqid() . '.' . $extension;
+    //             // Create unique filename
+    //             $fileName = time() . '_' . uniqid() . '.' . $extension;
                 
-                // Store file in appropriate directory
-                $directory = 'candidate-documents/' . $latestCandidate->candidate_id;
-                $filePath = $file->storeAs($directory, $fileName, 'public');
+    //             // Store file in appropriate directory
+    //             $directory = 'candidate-documents/' . $latestCandidate->candidate_id;
+    //             $filePath = $file->storeAs($directory, $fileName, 'public');
 
-                // Create new candidate document record
-                $candidateDoc = CandidateDocs::create([
-                    'document' => $filePath,
-                    'candidate_id' => $latestCandidate->candidate_id,
-                    'file_type' => $extension,
-                    'original_name' => $file->getClientOriginalName()
-                ]);
+    //             // Create new candidate document record
+    //             $candidateDoc = CandidateDocs::create([
+    //                 'document' => $filePath,
+    //                 'candidate_id' => $latestCandidate->candidate_id,
+    //                 'file_type' => $extension,
+    //                 'original_name' => $file->getClientOriginalName()
+    //             ]);
 
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Document uploaded successfully',
-                    'data' => [
-                        'document_id' => $candidateDoc->id,
-                        'file_path' => $filePath,
-                        'file_type' => $extension,
-                        'original_name' => $file->getClientOriginalName(),
-                        'size' => $file->getSize(),
-                        'candidate_id' => $latestCandidate->candidate_id
-                    ]
-                ], 201);
-            }
+    //             return response()->json([
+    //                 'success' => true,
+    //                 'message' => 'Document uploaded successfully',
+    //                 'data' => [
+    //                     'document_id' => $candidateDoc->id,
+    //                     'file_path' => $filePath,
+    //                     'file_type' => $extension,
+    //                     'original_name' => $file->getClientOriginalName(),
+    //                     'size' => $file->getSize(),
+    //                     'candidate_id' => $latestCandidate->candidate_id
+    //                 ]
+    //             ], 201);
+    //         }
 
-            return response()->json([
-                'success' => false,
-                'message' => 'No document provided'
-            ], 400);
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'No document provided'
+    //         ], 400);
 
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            \Log::error('Validation error:', [
-                'errors' => $e->errors(),
-                'request' => $request->all()
-            ]);
+    //     } catch (\Illuminate\Validation\ValidationException $e) {
+    //         \Log::error('Validation error:', [
+    //             'errors' => $e->errors(),
+    //             'request' => $request->all()
+    //         ]);
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation failed',
-                'errors' => $e->errors()
-            ], 422);
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Validation failed',
+    //             'errors' => $e->errors()
+    //         ], 422);
 
-        } catch (\Exception $e) {
-            \Log::error('Document upload error:', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
+    //     } catch (\Exception $e) {
+    //         \Log::error('Document upload error:', [
+    //             'error' => $e->getMessage(),
+    //             'trace' => $e->getTraceAsString()
+    //         ]);
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to save document',
-                'error' => $e->getMessage()
-            ], 500);
-        }
-    }
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Failed to save document',
+    //             'error' => $e->getMessage()
+    //         ], 500);
+    //     }
+    // }
 
     public function getCandidateId(Request $request)
     {
