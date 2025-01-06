@@ -175,7 +175,9 @@ class ElectionController extends Component
         $this->type = $election->type;
         
         // Decode the position from JSON
-        $this->position = json_decode($election->position, true) ?? []; // Ensure it's an array
+        $this->position = is_string($election->position) 
+            ? json_decode($election->position, true) 
+            : $election->position ?? [];
         
         $this->description = $election->description;
         $this->nominate_period_start = date('Y-m-d', strtotime($election->nominate_period_start));

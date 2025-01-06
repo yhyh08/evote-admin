@@ -87,7 +87,7 @@
                 </a>
             </li>
 
-            <li class="nav-item pb-2">
+            <!-- <li class="nav-item pb-2">
                 <a class="nav-link {{ Route::currentRouteName() == 'report' ? 'active' : '' }}"
                     href="{{ route('report') }}">
                     <div
@@ -96,7 +96,7 @@
                     </div>
                     <span class="nav-link-text ms-1">Report</span>
                 </a>
-            </li>
+            </li> -->
 
             <li class="nav-item pb-2">
                 <a class="nav-link {{ Route::currentRouteName() == 'settings' ? 'active' : '' }}"
@@ -109,7 +109,7 @@
                 </a>
             </li>
             
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link {{ Route::currentRouteName() == 'billing' ? 'active' : '' }}"
                     href="{{ route('billing') }}">
                     <div
@@ -136,9 +136,9 @@
                     </div>
                     <span class="nav-link-text ms-1">Billing</span>
                 </a>
-            </li>
+            </li> -->
 
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link" href="{{ route('sign-in') }}">
                     <div
                         class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -198,7 +198,7 @@
                     </div>
                     <span class="nav-link-text ms-1">Sign Up</span>
                 </a>
-            </li>
+            </li> -->
         </ul>
     </div>
 </aside>

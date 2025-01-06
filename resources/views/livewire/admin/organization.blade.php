@@ -221,7 +221,7 @@
                     <div class="row">
                         <div class="col-md-3">
                             @if($selectedOrg->org_img)
-                                <img src="{{ asset('storage/' . $selectedOrg->org_img) }}" class="img-fluid rounded mb-3">
+                                <img src="{{ asset('storage/' . $selectedOrg->org_img) }}" class="img-fluid rounded mb-3" style="width: 70% !important;">
                             @else
                                 <div class="bg-light p-4 text-center rounded mb-3">
                                     <i class="fas fa-building fa-3x text-muted"></i>

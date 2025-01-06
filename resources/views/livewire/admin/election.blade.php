@@ -141,9 +141,15 @@
                     <div class="mb-3">
                         <label>Position</label>
                         <div class="dropdown">
-                            <button class="form-control text-start dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button class="form-control text-start dropdown-toggle {{ $isView ? 'bg-light text-muted' : '' }}" 
+                                type="button" 
+                                id="dropdownMenuButton" 
+                                @if(!$isView) data-bs-toggle="dropdown" @endif 
+                                aria-expanded="false"
+                                style="{{ $isView ? 'cursor: default' : '' }}">
                                 {{ count($position) }} Selected
                             </button>
+                            @if(!$isView)
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <div class="dropdown-item">
                                     <label class="position-label">
@@ -176,6 +182,7 @@
                                     </label>
                                 </div>
                             </div>
+                            @endif
                         </div>
                         
                         @error('position') <span class="text-danger">{{ $message }}</span> @enderror

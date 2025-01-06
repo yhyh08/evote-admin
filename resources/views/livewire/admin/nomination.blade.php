@@ -25,25 +25,25 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($nominations as $candidate_id => $candidateNominations)
+                                        @forelse($nominations as $candidate_id => $candidateNominations)
                                             @php
                                                 $firstNomination = $candidateNominations->first();
                                                 $nomineeCount = $candidateNominations->count();
                                                 $candidate = $firstNomination->candidate;
-                                                $electionTopic = $candidate->election->election_topic ?? 'N/A';
                                             @endphp
+                                            @if($candidate)
                                             <tr>
                                                 <td class="ps-3">
                                                     <p class="text-xs font-weight-bold mb-0">{{ $loop->iteration }}</p>
                                                 </td>
                                                 <td class="ps-3">
                                                     <p class="text-xs font-weight-bold mb-0">
-                                                        {{ $electionTopic }}
+                                                        {{ $candidate->election->election_topic ?? 'N/A' }}
                                                     </p>
                                                 </td>
                                                 <td class="ps-3">
                                                     <p class="text-xs font-weight-bold mb-0">
-                                                        {{ $candidate->candidate_name ?? 'N/A' }}
+                                                        {{ $candidate->candidate_name }}
                                                         @if($nomineeCount > 1)
                                                             <span class="badge bg-info ms-1">+{{ $nomineeCount - 1 }} more</span>
                                                         @endif
@@ -51,12 +51,12 @@
                                                 </td>
                                                 <td class="ps-3">
                                                     <p class="text-xs font-weight-bold mb-0">
-                                                        {{ $candidate->position ?? 'N/A' }}
+                                                        {{ $candidate->position }}
                                                     </p>
                                                 </td>
                                                 <td class="ps-3">
-                                                    <span class="badge bg-{{ $candidate->status === 'Approved' ? 'success' : 'warning' }}">
-                                                        {{ $candidate->status ?? 'N/A' }}
+                                                    <span class="badge bg-{{ $candidate->status === 'Approved' ? 'success' : ($candidate->status === 'Rejected' ? 'danger' : 'warning') }}">
+                                                        {{ $candidate->status ?? 'Pending' }}
                                                     </span>
                                                 </td>
                                                 <td class="ps-3">
@@ -67,7 +67,14 @@
                                                     </a>
                                                 </td>
                                             </tr>
-                                        @endforeach
+                                            @endif
+                                        @empty
+                                            <tr>
+                                                <td colspan="6" class="text-center py-4">
+                                                    <p class="text-sm text-secondary mb-0">No nominations found</p>
+                                                </td>
+                                            </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div>
@@ -313,7 +320,6 @@
                                                             <tr>
                                                                 <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">ID</th>
                                                                 <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">Document</th>
-                                                                <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">Description</th>
                                                                 <th class="text-left text-uppercase text-xxs font-weight-bolder opacity-7 ps-3">Action</th>
                                                             </tr>
                                                         </thead>
@@ -328,9 +334,6 @@
                                                                         <i class="fa-regular fa-file me-2"></i>
                                                                         <p class="text-xs font-weight-bold mb-0">{{ $document->name }}</p>
                                                                     </div>
-                                                                </td>
-                                                                <td class="ps-3">
-                                                                    <p class="text-xs font-weight-bold mb-0">{{ $document->description }}</p>
                                                                 </td>
                                                                 
                                                                 <td class="ps-3">
