@@ -83,7 +83,7 @@ class NominationSeeder extends Seeder
             ],
             [
                 'candidate_name' => 'Candidate 2',
-                'candidate_image' => '',
+                'candidate_image' => 'defaultProfile.jpg',
                 'candidate_phone' => '019-8765432',
                 'candidate_email' => 'candidate2@example.com',
                 'candidate_gender' => 'Female',
@@ -110,7 +110,7 @@ class NominationSeeder extends Seeder
             ],
             [
                 'candidate_name' => 'Candidate 3',
-                'candidate_image' => '',
+                'candidate_image' => 'defaultProfile.jpg',
                 'candidate_phone' => '019-8765432',
                 'candidate_email' => 'candidate3@example.com',
                 'candidate_gender' => 'Male',
@@ -137,7 +137,7 @@ class NominationSeeder extends Seeder
             ],
             [
                 'candidate_name' => 'Candidate 4',
-                'candidate_image' => '',
+                'candidate_image' => 'defaultProfile.jpg',
                 'candidate_phone' => '012-8765432',
                 'candidate_email' => 'candidate4@example.com',
                 'candidate_gender' => 'Male',

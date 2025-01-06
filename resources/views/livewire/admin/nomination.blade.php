@@ -332,17 +332,17 @@
                                                                 <td class="ps-3">
                                                                     <div class="d-flex align-items-center">
                                                                         <i class="fa-regular fa-file me-2"></i>
-                                                                        <p class="text-xs font-weight-bold mb-0">{{ $document->name }}</p>
+                                                                        <p class="text-xs font-weight-bold mb-0">{{ $document->document }}</p>
                                                                     </div>
                                                                 </td>
                                                                 
                                                                 <td class="ps-3">
-                                                                    <a href="#" wire:click.prevent="viewDocument({{ $document->id }})" 
+                                                                    <a href="#" wire:click.prevent="viewDocument({{ $document->cand_doc_id }})" 
                                                                        class="me-3" data-bs-toggle="tooltip" 
                                                                        data-bs-original-title="View document">
                                                                         <i class="fa-solid fa-file-lines text-secondary"></i>
                                                                     </a>
-                                                                    <a href="#" wire:click.prevent="downloadDocument({{ $document->id }})" 
+                                                                    <a href="#" wire:click.prevent="downloadDocument({{ $document->cand_doc_id }})" 
                                                                        class="me-3" data-bs-toggle="tooltip" 
                                                                        data-bs-original-title="Download document">
                                                                         <i class="fa-solid fa-download text-secondary"></i>

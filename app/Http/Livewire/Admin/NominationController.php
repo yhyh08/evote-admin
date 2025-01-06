@@ -157,20 +157,60 @@ class NominationController extends Component
 
     public function downloadDocument($documentId)
     {
-        $document = CandidateDocs::find($documentId);
-        if ($document) {
-            // Add your download logic here
+        try {
+            $document = CandidateDocs::findOrFail($documentId);
+            
+            if (!Storage::disk('public')->exists($document->document)) {
+                session()->flash('error', 'Document file not found.');
+                return;
+            }
+
+            // Get the file path and mime type
+            $filePath = Storage::disk('public')->path($document->document);
+            $mimeType = Storage::disk('public')->mimeType($document->document);
+
+            // Return response for file viewing
+            return response()->file($filePath, [
+                'Content-Type' => $mimeType,
+                'Content-Disposition' => 'inline; filename="' . basename($document->document) . '"'
+            ]);
+
+        } catch (\Exception $e) {
+            session()->flash('error', 'Error viewing document: ' . $e->getMessage());
+            return;
         }
     }
 
     public function viewDocument($documentId)
     {
-        $document = CandidateDocs::find($documentId);
-        if ($document) {
-            // Add your view logic here
+        try {
+            $document = CandidateDocs::findOrFail($documentId);
+            
+            if (!Storage::disk('public')->exists($document->document)) {
+                session()->flash('error', 'Document file not found.');
+                return null;
+            }
+
+            // Get the file URL for preview
+            $fileUrl = Storage::disk('public')->url($document->document);
+            
+            // Get file extension
+            $extension = pathinfo($document->document, PATHINFO_EXTENSION);
+            
+            return [
+                'url' => $fileUrl,
+                'type' => $extension,
+                'name' => basename($document->document),
+                'size' => Storage::disk('public')->size($document->document),
+                'mime' => Storage::disk('public')->mimeType($document->document)
+            ];
+
+        } catch (\Exception $e) {
+            session()->flash('error', 'Error viewing document: ' . $e->getMessage());
+            return null;
         }
     }
-
+    
     public function getAllCandidates(){
         $candidates = Candidate::all();
         return response()->json($candidates);
@@ -468,6 +508,7 @@ class NominationController extends Component
             ], 500);
         }
     }
+
     public function saveDocuments(Request $request)
     {
         try {
@@ -479,18 +520,23 @@ class NominationController extends Component
             if ($request->hasFile('document')) {
                 $file = $request->file('document');
                 $fileName = time() . '_' . $file->getClientOriginalName();
-                $path = $file->storeAs('documents', $fileName, 'public');
+                
+                // Create directory path with candidate ID
+                $directoryPath = 'documents/candidate_' . $request->candidate_id;
+                
+                // Store file in candidate-specific directory
+                $path = $file->storeAs($directoryPath, $fileName, 'public');
 
                 // Save the file path to the database
                 $doc = new CandidateDocs();
                 $doc->candidate_id = $request->candidate_id;
-                $doc->document = $path; // Save the file path to the 'document' field
+                $doc->document = $path;
                 $doc->save();
 
                 return response()->json([
                     'success' => true,
                     'message' => 'Document saved successfully',
-                    'file_path' => asset('storage/' . $path) // Return the accessible URL
+                    'file_path' => asset('storage/' . $path)
                 ]);
             }
 
@@ -508,99 +554,6 @@ class NominationController extends Component
             ], 500);
         }
     }
-    // public function saveCandidateDoc(Request $request)
-    // {
-    //     try {
-    //         \Log::info('Incoming request data:', [
-    //             'has_file' => $request->hasFile('document'),
-    //             'all_data' => $request->all()
-    //         ]);
-
-    //         // Get the latest candidate ID first
-    //         $latestCandidate = Candidate::latest()->first();
-            
-    //         if (!$latestCandidate) {
-    //             return response()->json([
-    //                 'success' => false,
-    //                 'message' => 'No candidate found'
-    //             ], 404);
-    //         }
-
-    //         // Add candidate_id to the request
-    //         $request->merge(['candidate_id' => $latestCandidate->candidate_id]);
-
-    //         // Validate single file - only allow pdf, jpg, jpeg, png
-    //         $validated = $request->validate([
-    //             'document' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120', // 5MB max
-    //             'candidate_id' => 'required|exists:candidates,candidate_id'
-    //         ]);
-
-    //         // Handle single file upload
-    //         if ($request->hasFile('document')) {
-    //             $file = $request->file('document');
-                
-    //             // Get file extension
-    //             $extension = $file->getClientOriginalExtension();
-                
-    //             // Create unique filename
-    //             $fileName = time() . '_' . uniqid() . '.' . $extension;
-                
-    //             // Store file in appropriate directory
-    //             $directory = 'candidate-documents/' . $latestCandidate->candidate_id;
-    //             $filePath = $file->storeAs($directory, $fileName, 'public');
-
-    //             // Create new candidate document record
-    //             $candidateDoc = CandidateDocs::create([
-    //                 'document' => $filePath,
-    //                 'candidate_id' => $latestCandidate->candidate_id,
-    //                 'file_type' => $extension,
-    //                 'original_name' => $file->getClientOriginalName()
-    //             ]);
-
-    //             return response()->json([
-    //                 'success' => true,
-    //                 'message' => 'Document uploaded successfully',
-    //                 'data' => [
-    //                     'document_id' => $candidateDoc->id,
-    //                     'file_path' => $filePath,
-    //                     'file_type' => $extension,
-    //                     'original_name' => $file->getClientOriginalName(),
-    //                     'size' => $file->getSize(),
-    //                     'candidate_id' => $latestCandidate->candidate_id
-    //                 ]
-    //             ], 201);
-    //         }
-
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'No document provided'
-    //         ], 400);
-
-    //     } catch (\Illuminate\Validation\ValidationException $e) {
-    //         \Log::error('Validation error:', [
-    //             'errors' => $e->errors(),
-    //             'request' => $request->all()
-    //         ]);
-
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Validation failed',
-    //             'errors' => $e->errors()
-    //         ], 422);
-
-    //     } catch (\Exception $e) {
-    //         \Log::error('Document upload error:', [
-    //             'error' => $e->getMessage(),
-    //             'trace' => $e->getTraceAsString()
-    //         ]);
-
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Failed to save document',
-    //             'error' => $e->getMessage()
-    //         ], 500);
-    //     }
-    // }
 
     public function getCandidateId(Request $request)
     {
