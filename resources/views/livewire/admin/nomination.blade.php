@@ -337,10 +337,12 @@
                                                                 </td>
                                                                 
                                                                 <td class="ps-3">
-                                                                    <a href="#" wire:click.prevent="viewDocument({{ $document->cand_doc_id }})" 
-                                                                       class="me-3" data-bs-toggle="tooltip" 
-                                                                       data-bs-original-title="View document">
-                                                                        <i class="fa-solid fa-file-lines text-secondary"></i>
+                                                                    <a href="{{ Storage::url($document->document) }}" 
+                                                                        target="_blank" 
+                                                                        class="me-3" 
+                                                                        data-bs-toggle="tooltip" 
+                                                                        data-bs-original-title="View document">
+                                                                            <i class="fa-solid fa-file-lines text-secondary"></i>
                                                                     </a>
                                                                     <a href="#" wire:click.prevent="downloadDocument({{ $document->cand_doc_id }})" 
                                                                        class="me-3" data-bs-toggle="tooltip" 
@@ -428,59 +430,14 @@
     <div class="modal-backdrop fade show" style="z-index: 999998;"></div>
     @endif
 
-    <!-- Document Preview Modal -->
-    @if($showPreviewModal && $previewDocument)
-        <div class="modal fixed inset-0 z-50 overflow-y-auto" style="display: block;">
-            <div class="modal-overlay absolute inset-0 bg-gray-500 opacity-75"></div>
-            
-            <div class="modal-container bg-white w-11/12 md:max-w-3xl mx-auto rounded shadow-lg z-50 overflow-y-auto mt-10">
-                <!-- Modal Header -->
-                <div class="modal-header flex justify-between items-center p-4 border-b">
-                    <h3 class="text-lg font-semibold">{{ $previewDocument['name'] }}</h3>
-                    <button wire:click="closePreview" class="text-black">&times;</button>
-                </div>
-                
-                <!-- Modal Content -->
-                <div class="modal-content p-4">
-                    @if(in_array($previewDocument['type'], ['jpg', 'jpeg', 'png', 'gif']))
-                        <img src="{{ $previewDocument['url'] }}" class="max-w-full mx-auto" alt="Document Preview">
-                    @elseif($previewDocument['type'] === 'pdf')
-                        <iframe src="{{ $previewDocument['url'] }}" 
-                                class="w-full" 
-                                style="height: 70vh;" 
-                                frameborder="0">
-                        </iframe>
-                    @else
-                        <div class="text-center py-8">
-                            <p>Preview not available for this file type.</p>
-                            <a href="{{ $previewDocument['url'] }}" 
-                               target="_blank" 
-                               class="inline-block mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                                Download File
-                            </a>
-                        </div>
-                    @endif
-                </div>
-            </div>
-        </div>
-    @endif
-
     <x-alert type="success" />
     <x-alert type="error" />
 </div>
 
-@push('scripts')
 <script>
-    window.addEventListener('hideModal', event => {
-        document.querySelectorAll('.modal').forEach(modal => {
-            modal.style.display = 'none';
+    document.addEventListener('livewire:init', () => {
+        Livewire.on('openPreviewInNewTab', (data) => {
+            window.open(data[0].url, '_blank');
         });
-        document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
-            backdrop.remove();
-        });
-        document.body.classList.remove('modal-open');
-        document.body.style.overflow = '';
-        document.body.style.paddingRight = '';
     });
 </script>
-@endpush

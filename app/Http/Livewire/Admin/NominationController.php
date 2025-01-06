@@ -28,8 +28,6 @@ class NominationController extends Component
     public $currentCandidateId = null;
     public $currentStep = 1;
     public $selectedNomination;
-    public $previewDocument = null;
-    public $showPreviewModal = false;
 
     protected $listeners = ['refreshComponent' => '$refresh'];
 
@@ -167,11 +165,9 @@ class NominationController extends Component
                 return;
             }
 
-            // Get the file path and mime type
             $filePath = Storage::disk('public')->path($document->document);
             $mimeType = Storage::disk('public')->mimeType($document->document);
 
-            // Return response for file viewing
             return response()->file($filePath, [
                 'Content-Type' => $mimeType,
                 'Content-Disposition' => 'inline; filename="' . basename($document->document) . '"'
@@ -193,18 +189,49 @@ class NominationController extends Component
                 return;
             }
 
-            // Return URL to be opened in new tab
-            return redirect()->to(url(Storage::url($document->document)));
+            $fileExtension = pathinfo($document->document, PATHINFO_EXTENSION);
+            $fileName = basename($document->document);
+            $fileUrl = Storage::url($document->document);
+
+            $this->previewDocument = [
+                'name' => $fileName,
+                'type' => strtolower($fileExtension),
+                'url' => $fileUrl
+            ];
+            
+            $this->showPreviewModal = true;
+
+            $this->dispatch('openPreviewInNewTab', [
+                'url' => $fileUrl,
+                'fileName' => $fileName
+            ]);
 
         } catch (\Exception $e) {
             session()->flash('error', 'Error viewing document: ' . $e->getMessage());
         }
     }
 
-    public function closePreview()
+    public function openInNewTab($documentId)
     {
-        $this->showPreviewModal = false;
-        $this->previewDocument = null;
+        try {
+            $document = CandidateDocs::findOrFail($documentId);
+            
+            if (!Storage::disk('public')->exists($document->document)) {
+                session()->flash('error', 'Document file not found.');
+                return;
+            }
+
+            return response()->json([
+                'success' => true,
+                'url' => Storage::url($document->document)
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error opening document: ' . $e->getMessage()
+            ]);
+        }
     }
     
     public function getAllCandidates(){
