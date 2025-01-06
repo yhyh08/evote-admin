@@ -28,6 +28,8 @@ class NominationController extends Component
     public $currentCandidateId = null;
     public $currentStep = 1;
     public $selectedNomination;
+    public $previewDocument = null;
+    public $showPreviewModal = false;
 
     protected $listeners = ['refreshComponent' => '$refresh'];
 
@@ -188,27 +190,21 @@ class NominationController extends Component
             
             if (!Storage::disk('public')->exists($document->document)) {
                 session()->flash('error', 'Document file not found.');
-                return null;
+                return;
             }
 
-            // Get the file URL for preview
-            $fileUrl = Storage::disk('public')->url($document->document);
-            
-            // Get file extension
-            $extension = pathinfo($document->document, PATHINFO_EXTENSION);
-            
-            return [
-                'url' => $fileUrl,
-                'type' => $extension,
-                'name' => basename($document->document),
-                'size' => Storage::disk('public')->size($document->document),
-                'mime' => Storage::disk('public')->mimeType($document->document)
-            ];
+            // Return URL to be opened in new tab
+            return redirect()->to(url(Storage::url($document->document)));
 
         } catch (\Exception $e) {
             session()->flash('error', 'Error viewing document: ' . $e->getMessage());
-            return null;
         }
+    }
+
+    public function closePreview()
+    {
+        $this->showPreviewModal = false;
+        $this->previewDocument = null;
     }
     
     public function getAllCandidates(){
