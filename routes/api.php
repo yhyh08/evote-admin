@@ -52,7 +52,5 @@ Route::prefix('v1')->group(function () {
 
     Route::get('/election/results', [ResultController::class, 'getAllResults']);
 
-    // Route::get('/election/{electionId}/result', [ResultController::class, 'getResult']);
-
-    // Route::get('/election/{electionId}/publish', [ResultController::class, 'publishResult']);
+    Route::post('/organizations', [OrganizationController::class, 'submitOrganization']);
 });

@@ -28,7 +28,7 @@ class UserSeeder extends Seeder
                 'name' => 'user',
                 'email' => 'user@user.com',
                 'fullname' => 'Voter',
-                'phone' => '+6019-7535922',
+                'phone' => '+6019-7725921',
                 'role_id' => 2, // user role
                 'password' => Hash::make('password'),
                 'created_at' => now(),

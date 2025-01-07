@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\Organization;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 
 class OrganizationController extends Component
 {
@@ -231,5 +232,45 @@ class OrganizationController extends Component
             'org_img' => $organization->org_img,
             'is_active' => $organization->is_active
         ]);
+    }
+
+    public function submitOrganization(Request $request)
+    {
+        $validatedData = $request->validate([
+            'org_name' => 'required|min:3',
+            'org_desc' => 'required',
+            'org_cat' => 'required',
+            'org_address' => 'required',
+            'org_img' => 'nullable|image|max:1024',
+            'pic_name' => 'required|min:3',
+            'pic_phone' => ['required', 'regex:/^(\+?6?01)[0-46-9]-*[0-9]{7,8}$/'],
+            'pic_email' => 'required|email',
+            'org_website' => 'required|url',
+            'org_email' => 'required|email',
+            'org_size' => 'required',
+        ]);
+
+        try {
+            $data = $validatedData;
+            
+            if ($request->hasFile('org_img')) {
+                $data['org_img'] = $request->file('org_img')->store('organizations', 'public');
+            }
+
+            $organization = Organization::create($data);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Organization created successfully',
+                'data' => $organization
+            ], 201);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create organization',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

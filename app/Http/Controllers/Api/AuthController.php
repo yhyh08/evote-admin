@@ -8,9 +8,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Twilio\Rest\Client;
+use Twilio\Exceptions\TwilioException;
 
 class AuthController extends Controller
 {
+    private $maxRetries = 3;
+    private $retryDelay = 5; // seconds
+    
     public function checkUser($phone)
     {
         try {
@@ -31,6 +35,43 @@ class AuthController extends Controller
                 'error' => 'Error checking user',
                 'message' => $e->getMessage()
             ], 500);
+        }
+    }
+
+    private function sendTwilioMessage($client, $phone, $message, $attempt = 1)
+    {
+        try {
+            $twilioMessage = $client->messages->create(
+                $phone,
+                [
+                    'from' => config('services.twilio.from'),
+                    'body' => $message,
+                    'statusCallback' => config('services.twilio.status_callback', null) // Add status callback URL in your config
+                ]
+            );
+
+            // Check message status
+            $startTime = time();
+            while (time() - $startTime < 30) { // Wait up to 30 seconds for delivery
+                $messageStatus = $client->messages($twilioMessage->sid)->fetch()->status;
+                
+                if ($messageStatus === 'delivered') {
+                    Log::info("Message delivered successfully on attempt {$attempt}");
+                    return ['success' => true, 'message' => 'Message delivered'];
+                }
+                
+                if (in_array($messageStatus, ['failed', 'undelivered'])) {
+                    throw new TwilioException("Message {$messageStatus}");
+                }
+                
+                sleep(2);
+            }
+            
+            throw new TwilioException("Message delivery timeout");
+            
+        } catch (TwilioException $e) {
+            Log::warning("Twilio attempt {$attempt} failed: " . $e->getMessage());
+            return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
@@ -56,8 +97,11 @@ class AuthController extends Controller
             $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
             Log::info('Generated OTP: ' . $otp . ' for phone: ' . $request->phone);
             
-            // Store OTP in cache
-            Cache::put('otp_' . $request->phone, $otp, now()->addMinutes(10));
+            // Store OTP in cache with attempts counter
+            Cache::put('otp_' . $request->phone, [
+                'code' => $otp,
+                'attempts' => 0
+            ], now()->addMinutes(10));
 
             // Verify Twilio credentials exist
             if (!config('services.twilio.sid') || !config('services.twilio.token') || !config('services.twilio.from')) {
@@ -68,45 +112,42 @@ class AuthController extends Controller
                 ], 500);
             }
 
-            try {
-                $client = new Client(
-                    config('services.twilio.sid'),
-                    config('services.twilio.token')
-                );
-                
-                $message = $client->messages->create(
-                    $request->phone,
-                    [
-                        'from' => config('services.twilio.from'),
-                        'body' => "Your login OTP is: $otp. Valid for 10 minutes."
-                    ]
-                );
+            $client = new Client(
+                config('services.twilio.sid'),
+                config('services.twilio.token')
+            );
 
-                Log::info('Twilio message sent successfully to: ' . $request->phone);
+            $message = "Your login OTP is: $otp. Valid for 10 minutes.";
+            
+            // Implement retry logic
+            for ($attempt = 1; $attempt <= $this->maxRetries; $attempt++) {
+                $result = $this->sendTwilioMessage($client, $request->phone, $message, $attempt);
                 
-                return response()->json([
-                    'status' => true,
-                    'message' => 'OTP sent successfully'
-                ]);
-
-            } catch (\Twilio\Exceptions\TwilioException $e) {
-                Log::error('Twilio error: ' . $e->getMessage());
-                
-                // For development environment only
-                if (app()->environment('local')) {
+                if ($result['success']) {
                     return response()->json([
                         'status' => true,
-                        'message' => 'OTP generated (Twilio disabled in development)',
-                        'debug_otp' => $otp,
-                        'twilio_error' => $e->getMessage()
+                        'message' => 'OTP sent successfully'
                     ]);
                 }
-
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Failed to send OTP: ' . $e->getMessage()
-                ], 500);
+                
+                if ($attempt < $this->maxRetries) {
+                    sleep($this->retryDelay);
+                }
             }
+
+            // If we're in development, return the OTP for testing
+            if (app()->environment('local')) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'OTP generated (Twilio disabled in development)',
+                    'debug_otp' => $otp
+                ]);
+            }
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Failed to send OTP after multiple attempts'
+            ], 500);
 
         } catch (\Exception $e) {
             Log::error('Error in sendOTP: ' . $e->getMessage());
@@ -128,18 +169,34 @@ class AuthController extends Controller
                 'otp' => 'required'
             ]);
 
-            // Get cached OTP
-            $cachedOtp = Cache::get('otp_' . $request->phone);
+            // Get cached OTP data
+            $cachedData = Cache::get('otp_' . $request->phone);
             
-            if (!$cachedOtp) {
+            if (!$cachedData) {
                 return response()->json([
                     'status' => false,
                     'message' => 'OTP has expired'
                 ], 400);
             }
 
-            if ($request->otp !== $cachedOtp) {
-                Log::info('OTP mismatch. Received: ' . $request->otp . ', Expected: ' . $cachedOtp);
+            // Increment attempt counter
+            $attempts = $cachedData['attempts'] + 1;
+            if ($attempts >= 3) {
+                Cache::forget('otp_' . $request->phone);
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Too many invalid attempts. Please request a new OTP.'
+                ], 400);
+            }
+
+            // Update attempts in cache
+            Cache::put('otp_' . $request->phone, [
+                'code' => $cachedData['code'],
+                'attempts' => $attempts
+            ], now()->addMinutes(10));
+
+            if ($request->otp !== $cachedData['code']) {
+                Log::info('OTP mismatch. Received: ' . $request->otp . ', Expected: ' . $cachedData['code']);
                 return response()->json([
                     'status' => false,
                     'message' => 'Invalid OTP'
@@ -163,7 +220,6 @@ class AuthController extends Controller
             // Clear used OTP
             Cache::forget('otp_' . $request->phone);
 
-            // Return user details including name
             return response()->json([
                 'status' => true,
                 'message' => 'Login successful',
@@ -191,15 +247,14 @@ class AuthController extends Controller
     public function getUserInfo($phone)
     {
         $user = User::where('phone', $phone)->first();
-        if($user){
-        return response()->json([
-            'name' => $user->name,
-            'fullname' => $user->fullname,
-            'email' => $user->email,
-            'phone' => $user->phone,
-        ]);
-        }
-        else{
+        if ($user) {
+            return response()->json([
+                'name' => $user->name,
+                'fullname' => $user->fullname,
+                'email' => $user->email,
+                'phone' => $user->phone,
+            ]);
+        } else {
             return response()->json(['error' => 'User not found']);
         }
     }
