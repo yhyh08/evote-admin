@@ -52,5 +52,5 @@ Route::prefix('v1')->group(function () {
 
     Route::get('/election/results', [ResultController::class, 'getAllResults']);
 
-    Route::post('/organizations', [OrganizationController::class, 'submitOrganization']);
+    Route::post('/save-organizations', [OrganizationController::class, 'saveOrganization']);
 });

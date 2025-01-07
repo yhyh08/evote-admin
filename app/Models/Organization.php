@@ -23,7 +23,6 @@ class Organization extends Model
         'pic_name',
         'pic_phone',
         'pic_email',
-        'is_active'
     ];
 
     protected $casts = [

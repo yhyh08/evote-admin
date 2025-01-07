@@ -7,6 +7,7 @@ use App\Models\Organization;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class OrganizationController extends Component
 {
@@ -234,24 +235,29 @@ class OrganizationController extends Component
         ]);
     }
 
-    public function submitOrganization(Request $request)
+    public function saveOrganization(Request $request)
     {
-        $validatedData = $request->validate([
-            'org_name' => 'required|min:3',
-            'org_desc' => 'required',
-            'org_cat' => 'required',
-            'org_address' => 'required',
-            'org_img' => 'nullable|image|max:1024',
-            'pic_name' => 'required|min:3',
-            'pic_phone' => ['required', 'regex:/^(\+?6?01)[0-46-9]-*[0-9]{7,8}$/'],
-            'pic_email' => 'required|email',
-            'org_website' => 'required|url',
-            'org_email' => 'required|email',
-            'org_size' => 'required',
-        ]);
-
         try {
+            $validatedData = $request->validate([
+                'org_name' => 'required|min:3',
+                'org_desc' => 'required',
+                'org_cat' => 'required',
+                'org_address' => 'required',
+                'org_img' => 'nullable|image|max:1024',
+                'pic_name' => 'required|min:3',
+                'pic_phone' => ['required', 'regex:/^(\+?6?01)[0-46-9]-*[0-9]{7,8}$/'],
+                'pic_email' => 'required|email',
+                'org_website' => 'required|string',
+                'org_email' => 'required|email',
+                'org_size' => 'required|string',
+                'is_active' => 'nullable|boolean'
+            ]);
+
             $data = $validatedData;
+            
+            if (!isset($data['is_active'])) {
+                $data['is_active'] = false;
+            }
             
             if ($request->hasFile('org_img')) {
                 $data['org_img'] = $request->file('org_img')->store('organizations', 'public');
@@ -265,6 +271,12 @@ class OrganizationController extends Component
                 'data' => $organization
             ], 201);
 
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
