@@ -440,6 +440,18 @@ class NominationController extends Component
                 'cand_doc_id' => json_encode($validated['cand_doc_id']),
             ]);
 
+        if (isset($data['signature'])) {
+            // Remove header of base64 if present
+            $signature = preg_replace('/^data:image\/\w+;base64,/', '', $data['signature']);
+            $signature = base64_decode($signature);
+            
+            $filename = 'signature_' . time() . '.png';
+            
+            Storage::disk('public')->put('nominations/signatures/' . $filename, $signature);
+            
+            $data['signature'] = 'nominations/signatures/' . $filename;
+        }
+
             $user = User::find($data['user_id']);
             if (!$user) {
                 return response()->json([
