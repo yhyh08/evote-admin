@@ -40,6 +40,21 @@ class ElectionSeeder extends Seeder
                 'org_id' => 2,
                 'created_at' => now(),
                 'updated_at' => now(),
+            ],
+            [
+                'election_topic' => 'Johor Diabolo Club Election ',
+                'type' => 1,
+                'position' => json_encode(['President', 'Vice President']),
+                'description' => 'Election for Diabolo Committee',
+                'start_date' => Carbon::now()->addDays(40),
+                'end_date' => Carbon::now()->addDays(45),
+                'nominate_period_start' => Carbon::now()->addDays(30),
+                'nominate_period_end' => Carbon::now()->addDays(49),
+                'result_release_date' => Carbon::now()->addDays(56),
+                'status' => 1,
+                'org_id' => 2,
+                'created_at' => now(),
+                'updated_at' => now(),
             ]
         ]);
     }

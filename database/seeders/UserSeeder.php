@@ -25,7 +25,7 @@ class UserSeeder extends Seeder
                 'updated_at' => now()
             ],
             [
-                'name' => 'user',
+                'name' => 'Yih Huei',
                 'email' => 'user@user.com',
                 'fullname' => 'Voter',
                 'phone' => '+6019-7725921',
