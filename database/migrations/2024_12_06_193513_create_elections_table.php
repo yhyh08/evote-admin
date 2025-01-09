@@ -21,7 +21,7 @@ return new class extends Migration
             $table->date('end_date');
             $table->string('nominate_period_start');
             $table->string('nominate_period_end');
-            $table->date('result_release_date');
+            $table->date('result_release_date')->nullable()->change();
             $table->string('status');
             $table->foreignId('org_id');
             $table->timestamps();

@@ -17,7 +17,8 @@ class Election extends Model
         'description',
         'nominate_period_start',
         'nominate_period_end',
-        'org_id'
+        'org_id',
+        'result_release_date'
     ];
 
     protected $casts = [

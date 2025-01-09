@@ -87,14 +87,15 @@ class ElectionController extends Component
         Election::create([
             'election_topic' => $this->election_topic,
             'type' => $this->type,
-            'position' => json_encode($this->position),
+            'position' => implode(',', $this->position),
             'description' => $this->description,
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
             'nominate_period_start' => $this->nominate_period_start,
             'nominate_period_end' => $this->nominate_period_end,
             'status' => $this->status,
-            'org_id' => $this->org_id
+            'org_id' => $this->org_id,
+            'result_release_date' => '2025-01-08' 
         ]);
 
         session()->flash('success', 'Election Created Successfully.');
@@ -113,7 +114,7 @@ class ElectionController extends Component
         $this->election_topic = $election->election_topic;
         $this->type = $election->type;
         
-        $this->position = $election->position ?? [];
+        $this->position = explode(',', $election->position);
         
         $this->description = $election->description;
         $this->nominate_period_start = date('Y-m-d', strtotime($election->nominate_period_start));
@@ -146,7 +147,7 @@ class ElectionController extends Component
         Election::where('election_id', $this->election_id)->update([
             'election_topic' => $this->election_topic,
             'type' => $this->type,
-            'position' => json_encode($this->position),
+            'position' => implode(',', $this->position),
             'description' => $this->description,
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
